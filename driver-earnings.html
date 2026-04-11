@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earnings Report - BLACK BIRD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --gold: #F28C28;
+            --gold2: #ffa94d;
+            --dark: #07090d;
+            --dark2: #0d1017;
+            --dark3: #121620;
+            --surface: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --text: #e8eaf0;
+            --text2: #8a90a8;
+            --font-display: 'Bebas Neue', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --success: #27ae60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 50%, var(--dark3) 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: rgba(7, 9, 13, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold);
+            font-family: var(--font-display);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text2);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .back-btn {
+            color: var(--text2);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--gold);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-family: var(--font-display);
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            color: var(--text2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text2);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card h2 i {
+            color: var(--gold);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 1rem;
+        }
+
+        .earnings-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .earnings-table th {
+            background: rgba(242, 140, 40, 0.1);
+            padding: 0.75rem;
+            text-align: left;
+            color: var(--gold);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+        }
+
+        .earnings-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .earnings-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text2);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h2 {
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(242, 140, 40, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--gold);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text2);
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text2);
+        }
+
+        .spinner {
+            border: 3px solid rgba(242, 140, 40, 0.2);
+            border-top: 3px solid var(--gold);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/driver-login" class="logo">
+            <i class="fas fa-chart-bar"></i>
+            BLACK BIRD
+        </a>
+        <nav class="nav-links">
+            <a href="/driver">Payment Submissions</a>
+            <a href="/rent-to-own-driver">Rent-to-Own</a>
+            <a href="/driver-login" class="back-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-chart-bar"></i> Earnings Report</h1>
+            <p>View your monthly earnings and statistics</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+                <div class="stat-label">Total Earnings</div>
+                <div class="stat-value" id="totalEarnings">ZMW 0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar"></i></div>
+                <div class="stat-label">This Month</div>
+                <div class="stat-value" id="monthEarnings">ZMW 0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-label">Submissions</div>
+                <div class="stat-value" id="totalSubmissions">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-label">Pending</div>
+                <div class="stat-value" id="pendingSubmissions">0</div>
+            </div>
+        </div>
+
+        <!-- Charts and Tables -->
+        <div class="content-grid">
+            <!-- Chart -->
+            <div class="card">
+                <h2><i class="fas fa-chart-line"></i> Monthly Trend</h2>
+                <div class="chart-container">
+                    <canvas id="earningsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="card">
+                <h2><i class="fas fa-info-circle"></i> Summary</h2>
+                <table class="earnings-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Count</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summaryTable">
+                        <tr>
+                            <td colspan="3" style="text-align: center; color: var(--text2);">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recent Submissions -->
+        <div class="card">
+            <h2><i class="fas fa-history"></i> Recent Submissions</h2>
+            <table class="earnings-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="submissionsTable">
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: var(--text2);">Loading submissions...</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="exportEarnings()">
+                    <i class="fas fa-download"></i>
+                    Export Report
+                </button>
+                <button class="btn btn-secondary" onclick="printEarnings()">
+                    <i class="fas fa-print"></i>
+                    Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 BLACK BIRD Logistics. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // =========== SUPABASE CLIENT ===========
+        const SB_URL = 'https://cwuogdcxckenebarxsjd.supabase.co';
+        const SB_KEY = 'sb_publishable_pxYuv_yRuE0r6zI0etWDHg_tEkb9ttT';
+        const SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+
+        async function sbFetch(path, opts = {}) {
+            const url = SB_URL + path;
+            const method = opts.method || 'GET';
+            const headers = { ...SB_HEADERS, ...opts.headers };
+            return fetch(url, { method, headers, body: opts.body ? JSON.stringify(opts.body) : null })
+                .then(r => r.json());
+        }
+
+        let driverId = null;
+        let token = null;
+        let earningsChart = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedDriverId = localStorage.getItem('driverId');
+            const storedToken = localStorage.getItem('driverToken');
+
+            if (!storedDriverId || !storedToken) {
+                showEmptyState();
+                return;
+            }
+
+            driverId = storedDriverId;
+            token = storedToken;
+            loadEarnings();
+        });
+
+        function loadEarnings() {
+            // Use Supabase REST API to fetch driver submissions
+            sbFetch(`/rest/v1/driver_submissions?driver_id=eq.${driverId}&select=*`, {
+                headers: {
+                    'Authorization': `Bearer ${SB_KEY}`
+                }
+            })
+            .then(data => {
+                if (Array.isArray(data)) {
+                    processEarnings(data);
+                } else {
+                    showEmptyState();
+                }
+            })
+            .catch(err => {
+                console.error('Error loading earnings:', err);
+            });
+        }
+
+        function processEarnings(submissions) {
+            // Calculate statistics
+            const totalEarnings = submissions.reduce((sum, sub) => sum + (parseFloat(sub.amount) || 0), 0);
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+
+            const monthEarnings = submissions
+                .filter(sub => {
+                    const subDate = new Date(sub.submission_date);
+                    return subDate.getMonth() === currentMonth && subDate.getFullYear() === currentYear;
+                })
+                .reduce((sum, sub) => sum + (parseFloat(sub.amount) || 0), 0);
+
+            const approved = submissions.filter(s => s.approval_status === 'Approved').length;
+            const pending = submissions.filter(s => s.approval_status === 'Pending').length;
+
+            // Update stat cards
+            document.getElementById('totalEarnings').textContent = `ZMW ${totalEarnings.toLocaleString('en-US', {maximumFractionDigits: 2})}`;
+            document.getElementById('monthEarnings').textContent = `ZMW ${monthEarnings.toLocaleString('en-US', {maximumFractionDigits: 2})}`;
+            document.getElementById('totalSubmissions').textContent = submissions.length;
+            document.getElementById('pendingSubmissions').textContent = pending;
+
+            // Render summary table
+            renderSummary(submissions);
+
+            // Render submissions table
+            renderSubmissions(submissions);
+
+            // Create chart
+            createEarningsChart(submissions);
+        }
+
+        function renderSummary(submissions) {
+            const summary = {
+                'Approved': { count: 0, amount: 0 },
+                'Pending': { count: 0, amount: 0 },
+                'Rejected': { count: 0, amount: 0 }
+            };
+
+            submissions.forEach(sub => {
+                const status = sub.approval_status || 'Pending';
+                if (!summary[status]) {
+                    summary[status] = { count: 0, amount: 0 };
+                }
+                summary[status].count++;
+                summary[status].amount += parseFloat(sub.amount) || 0;
+            });
+
+            const table = document.getElementById('summaryTable');
+            table.innerHTML = Object.entries(summary)
+                .filter(([_, data]) => data.count > 0)
+                .map(([status, data]) => `
+                    <tr>
+                        <td>${status}</td>
+                        <td>${data.count}</td>
+                        <td>ZMW ${data.amount.toLocaleString('en-US', {maximumFractionDigits: 2})}</td>
+                    </tr>
+                `)
+                .join('');
+        }
+
+        function renderSubmissions(submissions) {
+            const table = document.getElementById('submissionsTable');
+            const recent = submissions.slice(0, 10);
+
+            table.innerHTML = recent.map(sub => {
+                const date = new Date(sub.submission_date).toLocaleDateString();
+                const statusClass = sub.approval_status === 'Approved' ? 'approved' :
+                                   sub.approval_status === 'Rejected' ? 'rejected' : 'pending';
+
+                return `
+                    <tr>
+                        <td>${date}</td>
+                        <td>ZMW ${parseFloat(sub.amount).toLocaleString('en-US', {maximumFractionDigits: 2})}</td>
+                        <td><span style="color: ${statusClass === 'approved' ? 'var(--success)' : statusClass === 'rejected' ? '#e74c3c' : 'var(--gold)'}">${sub.approval_status || 'Pending'}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function createEarningsChart(submissions) {
+            const monthlyData = {};
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            // Initialize all months with 0
+            months.forEach((_, i) => {
+                monthlyData[i] = 0;
+            });
+
+            // Sum earnings by month
+            submissions.forEach(sub => {
+                const date = new Date(sub.submission_date);
+                const month = date.getMonth();
+                monthlyData[month] += parseFloat(sub.amount) || 0;
+            });
+
+            const ctx = document.getElementById('earningsChart').getContext('2d');
+            if (earningsChart) {
+                earningsChart.destroy();
+            }
+
+            earningsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Monthly Earnings',
+                        data: Object.values(monthlyData),
+                        borderColor: '#F28C28',
+                        backgroundColor: 'rgba(242, 140, 40, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#F28C28',
+                        pointBorderColor: '#ffa94d',
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#e8eaf0'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: '#8a90a8' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        x: {
+                            ticks: { color: '#8a90a8' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function exportEarnings() {
+            alert('Export feature coming soon!');
+        }
+
+        function printEarnings() {
+            window.print();
+        }
+
+        function showEmptyState() {
+            document.querySelector('.stats-grid').innerHTML = `
+                <div style="grid-column: 1 / -1;">
+                    <div class="empty-state">
+                        <i class="fas fa-chart-bar"></i>
+                        <h2>No Earnings Yet</h2>
+                        <p>Submit your first payment to see your earnings report.</p>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

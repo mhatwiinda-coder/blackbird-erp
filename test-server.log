@@ -1,0 +1,9 @@
+Test server running on port 9000
+[REQUEST] Driver 156, Password: Sisa@123
+[PARSE] driverIdInt = 156
+[QUERY] Found 1 user(s)
+[USER] Found user: ID=125, Role=driver_156
+[PASSWORD] Comparing "Sisa@123" against hash...
+[BCRYPT] Result: true
+[DRIVER] Unknown
+[SUCCESS] Driver 156 logged in

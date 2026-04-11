@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver & Rider Portal - BLACK BIRD Logistics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --gold: #F28C28;
+            --gold2: #ffa94d;
+            --dark: #07090d;
+            --dark2: #0d1017;
+            --dark3: #121620;
+            --surface: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --text: #e8eaf0;
+            --text2: #8a90a8;
+            --font-display: 'Bebas Neue', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 50%, var(--dark3) 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: rgba(7, 9, 13, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold);
+            font-family: var(--font-display);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text2);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .back-btn {
+            color: var(--text2);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--gold);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Page Title */
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            font-family: var(--font-display);
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text2);
+        }
+
+        /* Cards Grid */
+        .portals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .portal-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(242, 140, 40, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .portal-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        .portal-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-family: var(--font-display);
+            color: var(--text);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-description {
+            color: var(--text2);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .card-features {
+            text-align: left;
+            background: rgba(242, 140, 40, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 3px solid var(--gold);
+        }
+
+        .card-features li {
+            color: var(--text2);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-features i {
+            color: var(--gold);
+            width: 20px;
+        }
+
+        .card-button {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+            color: var(--dark);
+            border: none;
+            padding: 0.9rem 2.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-family: var(--font-body);
+            width: 100%;
+        }
+
+        .card-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(242, 140, 40, 0.3);
+        }
+
+        /* Login Section */
+        .login-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 3rem;
+            max-width: 500px;
+            margin: 0 auto;
+            margin-top: 4rem;
+        }
+
+        .login-section h2 {
+            font-size: 2rem;
+            font-family: var(--font-display);
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .login-section p {
+            color: var(--text2);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 1rem;
+            font-family: var(--font-body);
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(242, 140, 40, 0.2);
+        }
+
+        .login-button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+            color: var(--dark);
+            border: none;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font-body);
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(242, 140, 40, 0.3);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 1rem;
+            display: none;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 3px solid #ff6b6b;
+        }
+
+        .success-message {
+            color: #51cf66;
+            margin-top: 1rem;
+            display: none;
+            background: rgba(81, 207, 102, 0.1);
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 3px solid #51cf66;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(7, 9, 13, 0.5);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text2);
+            margin-top: 4rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .portals-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .login-section {
+                padding: 2rem;
+            }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(242, 140, 40, 0.2);
+            border-top: 3px solid var(--gold);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="logo">
+        <i class="fas fa-truck"></i>
+        BLACKBIRD
+    </div>
+    <nav class="nav-links">
+        <a href="/">← Back to Home</a>
+    </nav>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>🚗 Driver & Rider Portal</h1>
+        <p>Access your payment submissions, earnings, and logistics tools</p>
+    </div>
+
+    <!-- Portal Options Grid -->
+    <div class="portals-grid">
+        <!-- Payment Submissions Portal -->
+        <div class="portal-card" onclick="navigateTo('/driver')">
+            <i class="fas fa-credit-card card-icon"></i>
+            <h3 class="card-title">Payment Submissions</h3>
+            <p class="card-description">Submit your weekly cashing and track approvals</p>
+            <ul class="card-features">
+                <li><i class="fas fa-check"></i>Submit weekly earnings</li>
+                <li><i class="fas fa-clock"></i>Track submission status</li>
+                <li><i class="fas fa-eye"></i>View approval history</li>
+            </ul>
+            <button class="card-button">Open Portal →</button>
+        </div>
+
+        <!-- Rent-to-Own Portal -->
+        <div class="portal-card" onclick="navigateTo('/rent-to-own-driver')">
+            <i class="fas fa-car card-icon"></i>
+            <h3 class="card-title">Rent-to-Own</h3>
+            <p class="card-description">View your vehicle purchase agreement and payments</p>
+            <ul class="card-features">
+                <li><i class="fas fa-handshake"></i>Agreement details</li>
+                <li><i class="fas fa-chart-pie"></i>Payment progress</li>
+                <li><i class="fas fa-receipt"></i>Payment history</li>
+            </ul>
+            <button class="card-button">Check Status →</button>
+        </div>
+
+        <!-- Earnings Report -->
+        <div class="portal-card" onclick="navigateTo('/driver-earnings')">
+            <i class="fas fa-chart-bar card-icon"></i>
+            <h3 class="card-title">Earnings Report</h3>
+            <p class="card-description">View your monthly earnings and statistics</p>
+            <ul class="card-features">
+                <li><i class="fas fa-coins"></i>Total earnings</li>
+                <li><i class="fas fa-calendar"></i>Monthly breakdown</li>
+                <li><i class="fas fa-download"></i>Export reports</li>
+            </ul>
+            <button class="card-button">View Reports →</button>
+        </div>
+    </div>
+
+    <!-- Login Section -->
+    <div class="login-section">
+        <h2>Driver Login</h2>
+        <p>Sign in to access your portal</p>
+
+        <div class="form-group">
+            <label for="driver-id">Driver ID</label>
+            <input type="text" id="driver-id" placeholder="Enter your driver ID">
+        </div>
+
+        <div class="form-group">
+            <label for="driver-password">Password</label>
+            <input type="password" id="driver-password" placeholder="Enter your password">
+        </div>
+
+        <button class="login-button" onclick="driverLogin()">
+            <span id="login-text">Sign In</span>
+            <span class="spinner" id="login-spinner"></span>
+        </button>
+
+        <div class="error-message" id="error-message"></div>
+        <div class="success-message" id="success-message"></div>
+
+        <p style="color: var(--text2); font-size: 0.9rem; margin-top: 1.5rem; text-align: center;">
+            <strong>Default Password Format:</strong> FirstName@123<br>
+            Example: If your name is John, password is: John@123
+        </p>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2026 BLACKBIRD Logistics. All rights reserved.</p>
+    <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+        Need help? <a href="/" style="color: var(--gold); text-decoration: none;">Contact Support</a>
+    </p>
+</footer>
+
+<script>
+    // =========== SUPABASE CLIENT ===========
+    const SB_URL = 'https://cwuogdcxckenebarxsjd.supabase.co';
+    const SB_KEY = 'sb_publishable_pxYuv_yRuE0r6zI0etWDHg_tEkb9ttT';
+    const SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+
+    async function sbFetch(path, opts = {}) {
+        const url = SB_URL + path;
+        const method = opts.method || 'GET';
+        const headers = { ...SB_HEADERS, ...opts.headers };
+        return fetch(url, { method, headers, body: opts.body ? JSON.stringify(opts.body) : null })
+            .then(r => r.json());
+    }
+
+    // =========== NAVIGATION ===========
+    function navigateTo(path) {
+        window.location.href = path;
+    }
+
+    // =========== DRIVER LOGIN ===========
+    function driverLogin() {
+        const driverId = document.getElementById('driver-id').value.trim();
+        const password = document.getElementById('driver-password').value;
+        const errorMsg = document.getElementById('error-message');
+        const successMsg = document.getElementById('success-message');
+        const loginBtn = document.querySelector('.login-button');
+        const loginText = document.getElementById('login-text');
+        const loginSpinner = document.getElementById('login-spinner');
+
+        // Clear messages
+        errorMsg.style.display = 'none';
+        successMsg.style.display = 'none';
+
+        if (!driverId || !password) {
+            errorMsg.textContent = 'Please enter both Driver ID and password';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        // Show loading state
+        loginBtn.disabled = true;
+        loginText.style.display = 'none';
+        loginSpinner.style.display = 'inline-block';
+
+        // Call driver login API (uses current host)
+        const apiUrl = `${window.location.protocol}//${window.location.hostname}:8000/api/auth/driver-login`;
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ driverId: parseInt(driverId) || driverId, password })
+        })
+        .then(r => r.json())
+        .then(data => {
+            loginBtn.disabled = false;
+            loginText.style.display = 'inline';
+            loginSpinner.style.display = 'none';
+
+            if (data.error) {
+                errorMsg.textContent = data.error;
+                errorMsg.style.display = 'block';
+            } else {
+                // Save token, Supabase credentials, and driver info
+                localStorage.setItem('driverToken', data.token);
+                localStorage.setItem('driverId', data.driverId);
+                localStorage.setItem('driverName', data.driverName || 'Driver');
+                localStorage.setItem('sbToken', data.sbToken || SB_KEY);
+                localStorage.setItem('sbUrl', SB_URL);
+
+                successMsg.textContent = `✓ Welcome ${data.driverName}! Redirecting...`;
+                successMsg.style.display = 'block';
+
+                setTimeout(() => {
+                    window.location.href = '/driver';
+                }, 1000);
+            }
+        })
+        .catch(err => {
+            loginBtn.disabled = false;
+            loginText.style.display = 'inline';
+            loginSpinner.style.display = 'none';
+            errorMsg.textContent = 'Connection error. Please try again.';
+            errorMsg.style.display = 'block';
+            console.error(err);
+        });
+    }
+
+    // Allow Enter key to submit
+    document.getElementById('driver-password').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            driverLogin();
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1121 @@
+
+> blackbird-erp@1.0.0 start
+> node server/app.js
+
+🔄 Initializing Supabase-backed API routes...
+Blackbird ERP Server running on http://localhost:8000
+Connected to SQLite database at: D:\mainza\BLACK BIRD\blackbird_erp.db
+[AUTO-SYNC] ✓ Auto-sync service started
+Schema initialization error: SQLITE_MISUSE: no more rows available
+Schema initialization error: SQLITE_MISUSE: no more rows available
+Schema initialization error: SQLITE_MISUSE: no more rows available
+Schema initialization error: SQLITE_MISUSE: no more rows available
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTO-SYNC] ✓ Scheduled to sync every 5 minutes
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+Error creating payment record: {
+  code: '23503',
+  details: 'Key (rent_to_own_agreement_id)=(2) is not present in table "rent_to_own_agreements".',
+  hint: null,
+  message: 'insert or update on table "payments" violates foreign key constraint "payments_rent_to_own_agreement_id_fkey"'
+}
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+Error creating payment record: {
+  code: '23503',
+  details: 'Key (rent_to_own_agreement_id)=(2) is not present in table "rent_to_own_agreements".',
+  hint: null,
+  message: 'insert or update on table "payments" violates foreign key constraint "payments_rent_to_own_agreement_id_fkey"'
+}
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+Error creating payment record: {
+  code: '23503',
+  details: 'Key (rent_to_own_agreement_id)=(6) is not present in table "rent_to_own_agreements".',
+  hint: null,
+  message: 'insert or update on table "payments" violates foreign key constraint "payments_rent_to_own_agreement_id_fkey"'
+}
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[DRIVER-LOGIN] Attempting login for driver 19
+[LOGIN] User found: ID=5, Role=driver_19
+[LOGIN] Password mismatch for driver 19
+[DRIVER-LOGIN] Attempting login for driver 19
+[LOGIN] User found: ID=5, Role=driver_19
+[LOGIN] ✅ Driver 19 (MAINZA HATWIINDA) login successful
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+Error creating payment record: {
+  code: '23503',
+  details: 'Key (rent_to_own_agreement_id)=(6) is not present in table "rent_to_own_agreements".',
+  hint: null,
+  message: 'insert or update on table "payments" violates foreign key constraint "payments_rent_to_own_agreement_id_fkey"'
+}
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+Error creating payment record: {
+  code: '23503',
+  details: 'Key (rent_to_own_agreement_id)=(6) is not present in table "rent_to_own_agreements".',
+  hint: null,
+  message: 'insert or update on table "payments" violates foreign key constraint "payments_rent_to_own_agreement_id_fkey"'
+}
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTO-SYNC] ✓ Synced 38 vehicles, 48 drivers
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] JWT verification failed but localhost detected - granting default admin access
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[AUTH] Request from: ::1, isLocalhost: true, hasAuth: true
+[AUTH] Token verified for role: undefined
+[AUTH] No session found for token, creating new session...
+[AUTH] Failed to create/update session: [Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: sessions.user_role] {
+  errno: 19,
+  code: 'SQLITE_CONSTRAINT'
+}
+[AUTH] Session creation failed but token is valid, proceeding anyway...
+[DRIVER-LOGIN] Attempting login for driver 157
+[LOGIN] User found: ID=129, Role=driver_157
+[LOGIN] Password mismatch for driver 157
+[DRIVER-LOGIN] Attempting login for driver 157
+[DRIVER-LOGIN] Attempting login for driver 157
+[LOGIN] User found: ID=129, Role=driver_157
+[LOGIN] Password mismatch for driver 157
+[LOGIN] User found: ID=129, Role=driver_157
+[LOGIN] Password mismatch for driver 157
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] Error fetching vehicles from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching drivers from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching vehicles from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching drivers from Supabase: TypeError: fetch failed
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[DRIVER-LOGIN] Attempting login for driver 157
+[LOGIN] User found: ID=129, Role=driver_157
+[LOGIN] Password mismatch for driver 157
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+Error: ENOENT: no such file or directory, stat 'D:\mainza\BLACK BIRD\public\index.html'
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] Error fetching vehicles from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching drivers from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching vehicles from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching drivers from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching vehicles from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching drivers from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching vehicles from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching drivers from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching vehicles from Supabase: TypeError: fetch failed
+[AUTO-SYNC] Error fetching drivers from Supabase: TypeError: fetch failed
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] Error fetching vehicles from Supabase: TypeError: fetch failed
+[AUTO-SYNC] ✓ Synced 0 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers
+[AUTO-SYNC] ✓ Synced 39 vehicles, 49 drivers

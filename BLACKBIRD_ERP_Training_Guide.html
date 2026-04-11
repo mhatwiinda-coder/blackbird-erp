@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLACKBIRD ERP System - Complete Training Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .cover-page {
+            text-align: center;
+            padding: 60px 0;
+            border-bottom: 3px solid #FF9500;
+            margin-bottom: 40px;
+        }
+
+        .cover-page h1 {
+            font-size: 48px;
+            color: #FF9500;
+            margin-bottom: 10px;
+        }
+
+        .cover-page .subtitle {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .cover-page .info {
+            text-align: left;
+            display: inline-block;
+            background: #f9f9f9;
+            padding: 20px 30px;
+            border-left: 4px solid #FF9500;
+        }
+
+        .cover-page .info p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .cover-page .info strong {
+            color: #FF9500;
+            min-width: 100px;
+            display: inline-block;
+        }
+
+        h2 {
+            font-size: 28px;
+            color: #FF9500;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FF9500;
+        }
+
+        h3 {
+            font-size: 20px;
+            color: #333;
+            margin: 25px 0 15px 0;
+            padding-left: 10px;
+            border-left: 4px solid #FF9500;
+        }
+
+        h4 {
+            font-size: 16px;
+            color: #555;
+            margin: 15px 0 10px 0;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .section {
+            page-break-inside: avoid;
+            margin-bottom: 30px;
+        }
+
+        .toc {
+            background: #f9f9f9;
+            padding: 20px 30px;
+            border-left: 4px solid #FF9500;
+            margin: 20px 0;
+        }
+
+        .toc ol {
+            margin-left: 20px;
+        }
+
+        .toc li {
+            margin: 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        table th {
+            background: #FF9500;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        table tr:hover {
+            background: #f0f0f0;
+        }
+
+        .role-box {
+            background: #FFF5E6;
+            border-left: 4px solid #FF9500;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+
+        .role-box strong {
+            color: #FF9500;
+        }
+
+        .screenshot-placeholder {
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            padding: 60px 20px;
+            text-align: center;
+            color: #999;
+            margin: 20px 0;
+            font-style: italic;
+            border-radius: 3px;
+        }
+
+        .workflow-step {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .workflow-step strong {
+            color: #FF9500;
+        }
+
+        .feature-list {
+            margin: 15px 0 15px 30px;
+        }
+
+        .feature-list li {
+            margin: 8px 0;
+        }
+
+        .warning {
+            background: #FFF3CD;
+            border-left: 4px solid #FF9500;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 3px;
+        }
+
+        .success {
+            background: #D4EDDA;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 3px;
+        }
+
+        .page-break {
+            page-break-after: always;
+            height: 1px;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                max-width: 100%;
+                box-shadow: none;
+                padding: 0;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- COVER PAGE -->
+        <div class="cover-page">
+            <h1>BLACKBIRD ERP SYSTEM</h1>
+            <p class="subtitle">Complete User Training Guide</p>
+            <p style="color: #666; margin-bottom: 30px; font-size: 16px;">Operations & Management Portal</p>
+
+            <div class="info">
+                <p><strong>System:</strong> BLACKBIRD ERP - Driver & Fleet Management</p>
+                <p><strong>Version:</strong> 1.0 - Deployment Ready</p>
+                <p><strong>Generated:</strong> April 2026</p>
+                <p><strong>Roles Covered:</strong> CEO | HR Manager | Secretary | Accountant | Drivers</p>
+                <p><strong>Format:</strong> Complete Training & Reference Guide</p>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- TABLE OF CONTENTS -->
+        <h2>TABLE OF CONTENTS</h2>
+        <div class="toc">
+            <ol>
+                <li>System Overview & Architecture</li>
+                <li>Getting Started - Login & Navigation</li>
+                <li>Driver Portal (Driver Self-Service)</li>
+                <li>ERP System - CEO (Read-Only Access)</li>
+                <li>ERP System - HR & Fleet Manager</li>
+                <li>ERP System - Executive Secretary</li>
+                <li>ERP System - Company Accountant</li>
+                <li>Role-Based Access Matrix</li>
+                <li>Step-by-Step Workflows & Procedures</li>
+                <li>Troubleshooting & Support</li>
+                <li>Quick Reference Guide</li>
+            </ol>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SECTION 1 -->
+        <div class="section">
+            <h2>1. SYSTEM OVERVIEW & ARCHITECTURE</h2>
+
+            <h3>What is BLACKBIRD ERP?</h3>
+            <p>BLACKBIRD ERP is a comprehensive management system designed for logistics and transportation companies. It provides real-time tracking of drivers, vehicles, payments, and operations with role-based access control. The system has three main components:</p>
+
+            <table>
+                <tr>
+                    <th>Component</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><strong>Public Website</strong></td>
+                    <td>Customer-facing portal for service quotations and booking</td>
+                </tr>
+                <tr>
+                    <td><strong>Driver Portal</strong></td>
+                    <td>Individual driver login for payment submissions, earnings, and RTO agreements</td>
+                </tr>
+                <tr>
+                    <td><strong>ERP Dashboard</strong></td>
+                    <td>Administrative system for managers, accountants, and leadership with analytics and reporting</td>
+                </tr>
+            </table>
+
+            <h3>Key Features</h3>
+            <ul class="feature-list">
+                <li><strong>Real-Time Dashboard:</strong> Live metrics on drivers, vehicles, revenue, and alerts</li>
+                <li><strong>Driver Management:</strong> Track all active drivers with status, documents, and assignments</li>
+                <li><strong>Fleet Management:</strong> Vehicle inventory, maintenance tracking, insurance/tax due dates</li>
+                <li><strong>Payment Processing:</strong> Record driver payments, invoices, and RTO agreements</li>
+                <li><strong>RTO (Rent-to-Own):</strong> Manage vehicle purchase agreements with automatic ownership transfer</li>
+                <li><strong>Driver Submissions:</strong> Drivers submit payments, secretary approves for recording</li>
+                <li><strong>Weekly Logs:</strong> Track driver income, mileage, and trip data</li>
+                <li><strong>Analytics:</strong> Revenue tracking, driver performance, fleet utilization reports</li>
+                <li><strong>Role-Based Access:</strong> Different views and permissions for each user role</li>
+            </ul>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SECTION 2 -->
+        <div class="section">
+            <h2>2. GETTING STARTED - LOGIN & NAVIGATION</h2>
+
+            <h3>Website Access (Public)</h3>
+            <p>The public-facing website allows customers to view services and request quotations without logging in.</p>
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: Public Website Homepage]</div>
+
+            <h3>ERP System Login</h3>
+            <p>All staff members (CEO, HR Manager, Secretary, Accountant) access the ERP system at:</p>
+            <div class="role-box">
+                <strong>http://localhost:8000/erp</strong> (or your Netlify deployment URL)
+            </div>
+
+            <h4>Login Steps:</h4>
+            <ol class="feature-list">
+                <li>Select your role from the dropdown menu</li>
+                <li>Enter the password for your role (see Quick Reference)</li>
+                <li>Click "Sign In"</li>
+                <li>You will be directed to your personalized dashboard</li>
+            </ol>
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: ERP Login Screen]</div>
+
+            <h3>Driver Portal Login</h3>
+            <p>Drivers access their personal portal at:</p>
+            <div class="role-box">
+                <strong>http://localhost:8000/driver-login</strong> (or your Netlify deployment URL)
+            </div>
+
+            <h4>Driver Login Steps:</h4>
+            <ol class="feature-list">
+                <li>Enter your Driver ID (assigned by company)</li>
+                <li>Enter your password: <strong>FirstName@123</strong> (e.g., "Edward@123")</li>
+                <li>Click "Sign In"</li>
+                <li>You will see your personal driver dashboard</li>
+            </ol>
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: Driver Portal Login Screen]</div>
+
+            <h3>Navigation & Layout</h3>
+            <p>All ERP screens follow the same layout:</p>
+            <ul class="feature-list">
+                <li><strong>Left Sidebar:</strong> Menu organized by section (Overview, Operations, Finance, People, Maintenance, Analytics)</li>
+                <li><strong>Top Bar:</strong> Shows current user role, location, time, and user profile</li>
+                <li><strong>Main Content Area:</strong> Displays tables, forms, and data for the selected section</li>
+                <li><strong>Action Buttons:</strong> Add, Edit, Delete, Export, and Filter options appear in each section</li>
+            </ul>
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: ERP Navigation Layout]</div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SECTION 3 -->
+        <div class="section">
+            <h2>3. DRIVER PORTAL (DRIVER SELF-SERVICE)</h2>
+
+            <h3>Driver Portal Overview</h3>
+            <p>The Driver Portal is a dedicated system where individual drivers can manage their account, view earnings, and submit payment records. This portal is separate from the ERP system and provides drivers with transparency on their financial records.</p>
+
+            <h3>Driver Dashboard Features</h3>
+            <p><strong>After logging in, drivers see:</strong></p>
+
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>Welcome Banner</td>
+                    <td>Displays driver name and login status</td>
+                </tr>
+                <tr>
+                    <td>Total Submitted</td>
+                    <td>Sum of all payments submitted this month</td>
+                </tr>
+                <tr>
+                    <td>Pending Submissions</td>
+                    <td>Count of submissions awaiting approval</td>
+                </tr>
+                <tr>
+                    <td>Approved This Month</td>
+                    <td>Count of approved payments this month</td>
+                </tr>
+                <tr>
+                    <td>Submit New Payment</td>
+                    <td>Form to submit weekly cashing amount</td>
+                </tr>
+                <tr>
+                    <td>Submission History</td>
+                    <td>Table showing all past submissions with status</td>
+                </tr>
+                <tr>
+                    <td>Status Indicators</td>
+                    <td>Pending (orange), Approved (green), Rejected (red)</td>
+                </tr>
+            </table>
+
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: Driver Portal Dashboard]</div>
+
+            <h3>How to Submit a Payment</h3>
+            <div class="workflow-step">
+                <strong>Step 1:</strong> On the Driver Dashboard, locate the "Submit New Payment" section
+            </div>
+            <div class="workflow-step">
+                <strong>Step 2:</strong> Fill in the following fields:
+                <ul class="feature-list">
+                    <li><strong>Amount:</strong> The cash amount collected (required)</li>
+                    <li><strong>Week:</strong> The week number (auto-filled to current week)</li>
+                    <li><strong>Month:</strong> The month (auto-filled to current month)</li>
+                    <li><strong>Notes/Remarks:</strong> Optional details about the payment</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                <strong>Step 3:</strong> Click "Submit Payment"
+            </div>
+            <div class="workflow-step">
+                <strong>Step 4:</strong> Your submission will appear in "Submission History" with status "Pending"
+            </div>
+            <div class="workflow-step">
+                <strong>Step 5:</strong> Wait for Secretary/HR to review and approve
+            </div>
+            <div class="workflow-step">
+                <strong>Step 6:</strong> Once approved, status changes to "Approved" and payment is recorded in ERP
+            </div>
+
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: Driver - Submit New Payment Form]</div>
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: Driver - Submission History with Status]</div>
+
+            <h3>Viewing Payment History</h3>
+            <p>The "Submission History" table shows all your past submissions with:</p>
+            <ul class="feature-list">
+                <li><strong>Date Submitted:</strong> When you submitted the payment</li>
+                <li><strong>Amount:</strong> The payment amount</li>
+                <li><strong>Status:</strong> Pending, Approved, or Rejected</li>
+                <li><strong>Week/Month:</strong> The period for this payment</li>
+                <li><strong>Approved Date:</strong> When it was approved (if approved)</li>
+                <li><strong>Rejection Reason:</strong> Why it was rejected (if rejected)</li>
+            </ul>
+            <p>You can filter by status and search for specific submissions.</p>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SECTION 4 -->
+        <div class="section">
+            <h2>4. ERP SYSTEM - CEO (READ-ONLY ACCESS)</h2>
+
+            <h3>CEO Role Overview</h3>
+            <p>The CEO role provides read-only access to all company data for decision-making and oversight. CEOs can view reports, dashboards, and analytics but cannot modify any data. This ensures data integrity and creates an audit trail.</p>
+
+            <h3>CEO Access Restrictions</h3>
+            <div class="success">
+                <strong>CEOs CAN:</strong>
+                <ul class="feature-list">
+                    <li>View the company dashboard with all metrics and KPIs</li>
+                    <li>View all drivers, vehicles, jobs, and deliveries</li>
+                    <li>View payment records and financial data</li>
+                    <li>Export data to Excel</li>
+                    <li>View analytics and reports</li>
+                    <li>Monitor real-time alerts and vehicle status</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <strong>CEOs CANNOT:</strong>
+                <ul class="feature-list">
+                    <li>Create, edit, or delete any records</li>
+                    <li>Process payments or invoices</li>
+                    <li>Assign drivers to vehicles</li>
+                    <li>Approve RTO agreements</li>
+                    <li>Change system settings</li>
+                </ul>
+            </div>
+
+            <h3>CEO Dashboard Features</h3>
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: CEO - Main Dashboard with KPIs]</div>
+
+            <table>
+                <tr>
+                    <th>Metric</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>Active Drivers</td>
+                    <td>Number of drivers currently active</td>
+                </tr>
+                <tr>
+                    <td>Fleet Vehicles</td>
+                    <td>Total vehicles and their status</td>
+                </tr>
+                <tr>
+                    <td>Monthly Revenue</td>
+                    <td>Income for current month</td>
+                </tr>
+                <tr>
+                    <td>Vehicle Alerts</td>
+                    <td>Vehicles needing attention (maintenance, tax due, etc.)</td>
+                </tr>
+                <tr>
+                    <td>Open Jobs</td>
+                    <td>Active jobs awaiting completion</td>
+                </tr>
+                <tr>
+                    <td>Pending Quotations</td>
+                    <td>Quotations waiting for customer response</td>
+                </tr>
+            </table>
+
+            <h3>CEO Sections</h3>
+            <ul class="feature-list">
+                <li><strong>Overview/Dashboard:</strong> Executive summary with all key metrics and alerts</li>
+                <li><strong>Drivers & Riders:</strong> View all drivers, their status, and performance</li>
+                <li><strong>Fleet & Vehicles:</strong> View all vehicles with condition and maintenance status</li>
+                <li><strong>Jobs & Trips:</strong> View all active and completed jobs</li>
+                <li><strong>Deliveries:</strong> View delivery status and tracking</li>
+                <li><strong>Analytics:</strong> Reports on revenue, driver performance, and fleet utilization</li>
+            </ul>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SECTION 5 -->
+        <div class="section">
+            <h2>5. ERP SYSTEM - HR & FLEET MANAGER</h2>
+
+            <h3>HR & Fleet Manager Role Overview</h3>
+            <p>The HR & Fleet Manager role has full access to operations management including driver management, fleet operations, payments, and approvals. This role oversees day-to-day operations and approves critical submissions.</p>
+
+            <h3>HR Access Permissions</h3>
+            <div class="success">
+                <strong>HR Managers CAN:</strong>
+                <ul class="feature-list">
+                    <li>Manage all driver records (add, edit, delete)</li>
+                    <li>Assign drivers to vehicles</li>
+                    <li>View and manage fleet vehicles</li>
+                    <li>Record driver payments</li>
+                    <li>Approve RTO payment agreements</li>
+                    <li>Approve driver payment submissions</li>
+                    <li>View job assignments and completions</li>
+                    <li>Track weekly logs and driver income</li>
+                    <li>Create and manage staff records</li>
+                    <li>View analytics and reports</li>
+                    <li>Export data to Excel</li>
+                </ul>
+            </div>
+
+            <h3>Key HR Functions</h3>
+            <ul class="feature-list">
+                <li><strong>Drivers & Riders:</strong> Add new drivers, edit profiles, track status, assign to vehicles</li>
+                <li><strong>Fleet & Vehicles:</strong> View vehicles, track maintenance, view tax/insurance dates</li>
+                <li><strong>Jobs & Trips:</strong> Create and assign jobs, track completion, view earnings</li>
+                <li><strong>Weekly Logs:</strong> Record driver mileage and income by week</li>
+                <li><strong>Payments:</strong> Record driver payments manually or approve submitted payments</li>
+                <li><strong>HR/Staff:</strong> Manage company staff records, roles, and employment data</li>
+                <li><strong>RTO Agreements:</strong> Create and approve vehicle purchase agreements with auto-completion</li>
+                <li><strong>Pending RTO:</strong> Review and approve RTO driver payments</li>
+            </ul>
+
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: HR - Dashboard with Operations Metrics]</div>
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: HR - Driver Management Screen]</div>
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: HR - Fleet Management Screen]</div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SECTION 6 -->
+        <div class="section">
+            <h2>6. ERP SYSTEM - EXECUTIVE SECRETARY</h2>
+
+            <h3>Secretary Role Overview</h3>
+            <p>The Executive Secretary role manages financial operations, approves payment submissions, and handles quotations. Secretaries process driver payments and manage customer interactions.</p>
+
+            <h3>Secretary Access Permissions</h3>
+            <div class="success">
+                <strong>Secretaries CAN:</strong>
+                <ul class="feature-list">
+                    <li>View all driver information (read-only)</li>
+                    <li>View job and delivery assignments</li>
+                    <li><strong>APPROVE driver payment submissions</strong></li>
+                    <li><strong>REJECT driver payment submissions</strong></li>
+                    <li>Record driver payments</li>
+                    <li>Manage quotations (create, convert to jobs)</li>
+                    <li>Create and manage RTO agreements</li>
+                    <li><strong>APPROVE RTO driver payments</strong></li>
+                    <li>View and export reports</li>
+                    <li>Monitor pending approvals</li>
+                </ul>
+            </div>
+
+            <h3>Key Secretary Functions</h3>
+            <ul class="feature-list">
+                <li><strong>RTO Driver Submissions:</strong> Review and approve/reject driver RTO payment submissions</li>
+                <li><strong>Pending RTO Approvals:</strong> Queue of RTO payments waiting for secretary approval</li>
+                <li><strong>Quotations:</strong> Create and manage customer quotations</li>
+                <li><strong>Payments:</strong> Record payments and manage payment records</li>
+                <li><strong>Rent-to-Own:</strong> Manage RTO agreements and track payment progress</li>
+                <li><strong>Dashboard:</strong> Overview of pending approvals and key metrics</li>
+            </ul>
+
+            <h3>How to Approve Driver Submissions</h3>
+            <div class="workflow-step">
+                <strong>Step 1:</strong> From the main menu, click "RTO Driver Submissions" or "Pending RTO Approvals"
+            </div>
+            <div class="workflow-step">
+                <strong>Step 2:</strong> Review the pending submissions table showing:
+                <ul class="feature-list">
+                    <li>Driver name and ID</li>
+                    <li>Amount submitted</li>
+                    <li>Submission date and period (week/month)</li>
+                    <li>Notes from driver</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                <strong>Step 3:</strong> Click "REVIEW & APPROVE" button on the submission
+            </div>
+            <div class="workflow-step">
+                <strong>Step 4:</strong> A modal appears showing full submission details
+            </div>
+            <div class="workflow-step">
+                <strong>Step 5:</strong> Either:
+                <ul class="feature-list">
+                    <li>Click "APPROVE" to accept and record the payment</li>
+                    <li>Click "REJECT" to deny and provide rejection reason</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                <strong>Step 6:</strong> Payment status updates in real-time
+                <ul class="feature-list">
+                    <li>Approved: Payment recorded in ERP, driver notified</li>
+                    <li>Rejected: Driver can resubmit, reason provided</li>
+                </ul>
+            </div>
+
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: Secretary - RTO Driver Submissions Queue]</div>
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: Secretary - Approval/Rejection Modal]</div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SECTION 7 -->
+        <div class="section">
+            <h2>7. ERP SYSTEM - COMPANY ACCOUNTANT</h2>
+
+            <h3>Accountant Role Overview</h3>
+            <p>The Company Accountant role has access to financial data including payments, invoices, and quotations. Accountants can view financial reports and export data for auditing and accounting purposes.</p>
+
+            <h3>Accountant Access Permissions</h3>
+            <div class="success">
+                <strong>Accountants CAN:</strong>
+                <ul class="feature-list">
+                    <li>View all payment records</li>
+                    <li>View all invoices</li>
+                    <li>View all quotations</li>
+                    <li>Generate financial reports</li>
+                    <li>Export financial data to Excel</li>
+                    <li>View analytics and revenue reports</li>
+                    <li>Monitor monthly and annual revenue</li>
+                    <li>Access website activity logs</li>
+                </ul>
+            </div>
+
+            <h3>Accountant Sections</h3>
+            <ul class="feature-list">
+                <li><strong>Payments:</strong> View all driver payments, filter by date/driver, export records</li>
+                <li><strong>Invoices:</strong> View all invoices issued to customers</li>
+                <li><strong>Quotations:</strong> View all quotations and their status</li>
+                <li><strong>Analytics:</strong> Financial reports and revenue tracking</li>
+                <li><strong>Website Activity:</strong> Track website engagement and customer interactions</li>
+            </ul>
+
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: Accountant - Payments View with Filters]</div>
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: Accountant - Invoices View]</div>
+            <div class="screenshot-placeholder">[SCREENSHOT PLACEHOLDER: Accountant - Analytics Dashboard]</div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SECTION 8 -->
+        <div class="section">
+            <h2>8. ROLE-BASED ACCESS MATRIX</h2>
+            <p>This matrix shows what each role can access and their permission level:</p>
+
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>CEO</th>
+                    <th>HR Manager</th>
+                    <th>Secretary</th>
+                    <th>Accountant</th>
+                    <th>Driver</th>
+                </tr>
+                <tr>
+                    <td><strong>Dashboard</strong></td>
+                    <td>View</td>
+                    <td>Full</td>
+                    <td>View</td>
+                    <td>View</td>
+                    <td>Driver DB</td>
+                </tr>
+                <tr>
+                    <td><strong>Drivers</strong></td>
+                    <td>View</td>
+                    <td>Full</td>
+                    <td>View</td>
+                    <td>—</td>
+                    <td>Own Profile</td>
+                </tr>
+                <tr>
+                    <td><strong>Fleet Vehicles</strong></td>
+                    <td>View</td>
+                    <td>Full</td>
+                    <td>View</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>Jobs & Trips</strong></td>
+                    <td>View</td>
+                    <td>Full</td>
+                    <td>View</td>
+                    <td>—</td>
+                    <td>Assigned Jobs</td>
+                </tr>
+                <tr>
+                    <td><strong>Deliveries</strong></td>
+                    <td>View</td>
+                    <td>Full</td>
+                    <td>View</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>Payments</strong></td>
+                    <td>View</td>
+                    <td>Full</td>
+                    <td>Full</td>
+                    <td>View</td>
+                    <td>Submit</td>
+                </tr>
+                <tr>
+                    <td><strong>Invoices</strong></td>
+                    <td>View</td>
+                    <td>View</td>
+                    <td>View</td>
+                    <td>View</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>Quotations</strong></td>
+                    <td>View</td>
+                    <td>Full</td>
+                    <td>Full</td>
+                    <td>View</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>RTO Agreements</strong></td>
+                    <td>View</td>
+                    <td>Full</td>
+                    <td>Full</td>
+                    <td>—</td>
+                    <td>Submit</td>
+                </tr>
+                <tr>
+                    <td><strong>Payment Approvals</strong></td>
+                    <td>—</td>
+                    <td>Approve</td>
+                    <td>Approve</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>Staff Management</strong></td>
+                    <td>—</td>
+                    <td>Full</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>Analytics</strong></td>
+                    <td>View</td>
+                    <td>View</td>
+                    <td>View</td>
+                    <td>View</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>Export Data</strong></td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>—</td>
+                </tr>
+            </table>
+
+            <div class="success">
+                <strong>Legend:</strong><br/>
+                • <strong>Full:</strong> Create, read, edit, delete, and approve<br/>
+                • <strong>View:</strong> Read-only access, cannot modify<br/>
+                • <strong>Submit:</strong> Can submit but cannot approve own submissions<br/>
+                • <strong>Approve:</strong> Can review and approve submissions from others<br/>
+                • <strong>—:</strong> No access to this feature
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SECTION 9 -->
+        <div class="section">
+            <h2>9. STEP-BY-STEP WORKFLOWS & PROCEDURES</h2>
+
+            <h3>Workflow 1: Driver Payment Submission & Approval</h3>
+            <p><strong>Actors:</strong> Driver, Secretary/HR Manager</p>
+
+            <div class="workflow-step">
+                1. <strong>Driver logs in</strong> to driver portal (http://localhost:8000/driver-login)
+            </div>
+            <div class="workflow-step">
+                2. <strong>Driver submits payment</strong>
+                <ul class="feature-list">
+                    <li>Enters amount collected (e.g., 500 ZMW)</li>
+                    <li>Week/month auto-filled</li>
+                    <li>Optional notes (e.g., "Collected from fares")</li>
+                    <li>Clicks "Submit Payment"</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                3. <strong>Driver sees submission</strong> in history with status "Pending"
+            </div>
+            <div class="workflow-step">
+                4. <strong>Secretary/HR receives notification</strong> with link to submissions
+            </div>
+            <div class="workflow-step">
+                5. <strong>Secretary reviews</strong> in "RTO Driver Submissions" section
+            </div>
+            <div class="workflow-step">
+                6. <strong>Secretary approves or rejects</strong>
+                <ul class="feature-list">
+                    <li>If approved: Payment recorded in Payments table, status → "Approved"</li>
+                    <li>If rejected: Status → "Rejected" with reason</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                7. <strong>Driver sees updated status</strong> in their portal
+            </div>
+
+            <div class="success"><strong>Time to complete:</strong> 5-10 minutes</div>
+
+            <h3>Workflow 2: Rent-to-Own (RTO) Vehicle Agreement</h3>
+            <p><strong>Actors:</strong> HR Manager, Secretary, Driver</p>
+
+            <div class="workflow-step">
+                1. <strong>HR Manager creates RTO Agreement</strong>
+                <ul class="feature-list">
+                    <li>Goes to "Rent-to-Own" section → Click "New Agreement"</li>
+                    <li>Selects driver (customer) and vehicle</li>
+                    <li>Sets total price and down payment</li>
+                    <li>Clicks "Create Agreement"</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                2. <strong>System initializes agreement</strong> with remaining balance calculation
+            </div>
+            <div class="workflow-step">
+                3. <strong>Driver makes payments</strong> via driver portal
+                <ul class="feature-list">
+                    <li>Driver submits payment → Secretary approves → Payment recorded</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                4. <strong>Secretary records payments</strong> in RTO section
+                <ul class="feature-list">
+                    <li>Goes to "Rent-to-Own" → Click "Record Payment"</li>
+                    <li>Selects agreement and payment amount</li>
+                    <li>Clicks "Record Payment"</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                5. <strong>System updates balance</strong> in real-time
+            </div>
+            <div class="workflow-step">
+                6. <strong>Automatic completion</strong> when balance reaches 0
+                <ul class="feature-list">
+                    <li>Status changes to "Completed"</li>
+                    <li>Ownership auto-transfers to driver</li>
+                    <li>Timestamp recorded</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                7. <strong>Driver now owns vehicle</strong>
+            </div>
+
+            <div class="success"><strong>Time to complete:</strong> Weeks/months depending on payment schedule</div>
+
+            <h3>Workflow 3: Onboarding a New Driver</h3>
+            <p><strong>Actors:</strong> HR Manager</p>
+
+            <div class="workflow-step">
+                1. <strong>HR Manager adds new driver</strong>
+                <ul class="feature-list">
+                    <li>Goes to "Drivers & Riders" → Click "+ Add Driver"</li>
+                    <li>Fills in: Full name, Phone, Vehicle plate, Type, National ID, License number</li>
+                    <li>Clicks "Save Driver"</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                2. <strong>Driver automatically registered</strong> in system
+            </div>
+            <div class="workflow-step">
+                3. <strong>HR assigns vehicle (optional)</strong>
+                <ul class="feature-list">
+                    <li>Selects driver → Clicks "Edit"</li>
+                    <li>Assigns vehicle from dropdown</li>
+                    <li>Clicks "Save"</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                4. <strong>Driver portal account auto-created</strong> on first login
+                <ul class="feature-list">
+                    <li>Password: FirstName@123 (e.g., Edward@123)</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                5. <strong>Driver can now</strong>
+                <ul class="feature-list">
+                    <li>Log in to driver portal</li>
+                    <li>Submit payments</li>
+                    <li>View their records</li>
+                </ul>
+            </div>
+
+            <div class="success"><strong>Time to complete:</strong> 5 minutes</div>
+
+            <h3>Workflow 4: Generating Monthly Revenue Report (Accountant)</h3>
+            <p><strong>Actors:</strong> Company Accountant</p>
+
+            <div class="workflow-step">
+                1. <strong>Accountant logs in</strong> to ERP (http://localhost:8000/erp)
+            </div>
+            <div class="workflow-step">
+                2. <strong>Navigates to Analytics</strong> section
+            </div>
+            <div class="workflow-step">
+                3. <strong>Views Monthly Revenue chart</strong> showing current month earnings
+            </div>
+            <div class="workflow-step">
+                4. <strong>Goes to Payments section</strong> to see detailed transaction list
+            </div>
+            <div class="workflow-step">
+                5. <strong>Filters by date range</strong> (optional)
+                <ul class="feature-list">
+                    <li>Uses date picker to select start/end date</li>
+                    <li>Views all payments in that period</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                6. <strong>Exports to Excel</strong>
+                <ul class="feature-list">
+                    <li>Clicks "Export" button</li>
+                    <li>File downloads with all payment details</li>
+                </ul>
+            </div>
+            <div class="workflow-step">
+                7. <strong>Uses for accounting</strong>
+                <ul class="feature-list">
+                    <li>Reconciles with bank statements</li>
+                    <li>Prepares financial reports</li>
+                    <li>Auditing and compliance</li>
+                </ul>
+            </div>
+
+            <div class="success"><strong>Time to complete:</strong> 10-15 minutes</div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SECTION 10 -->
+        <div class="section">
+            <h2>10. TROUBLESHOOTING & SUPPORT</h2>
+
+            <h3>Common Issues & Solutions</h3>
+
+            <h4>Q: Driver cannot login</h4>
+            <p>A: Verify driver ID is correct and password is FirstName@123. System auto-creates account on first login.</p>
+
+            <h4>Q: Password incorrect error</h4>
+            <p>A: Password is case-sensitive. Default is FirstName@123 (capitalize first name). Contact HR to reset.</p>
+
+            <h4>Q: Payment submission not showing</h4>
+            <p>A: Refresh page (Ctrl+F5). Payment appears immediately after submission.</p>
+
+            <h4>Q: Approval button not visible</h4>
+            <p>A: Check that you have Secretary or HR role. Only these roles can approve.</p>
+
+            <h4>Q: Cannot edit vehicle</h4>
+            <p>A: Click the Edit button on the vehicle row. Form opens in modal. Update fields and click Save.</p>
+
+            <h4>Q: RTO agreement not calculating</h4>
+            <p>A: Ensure driver and vehicle are selected. System auto-calculates remaining balance.</p>
+
+            <h4>Q: Export to Excel not working</h4>
+            <p>A: Try different browser or clear cache. Ensure data is loaded before exporting.</p>
+
+            <h4>Q: Cannot see all menu items</h4>
+            <p>A: Check your user role. Different roles have different menu access.</p>
+
+            <h4>Q: System seems slow</h4>
+            <p>A: Clear browser cache (Ctrl+Shift+Delete). Sync service runs every 5 minutes.</p>
+
+            <h4>Q: Data not updating</h4>
+            <p>A: Refresh page (Ctrl+F5) or restart server if self-hosted.</p>
+
+            <h3>Support & Contact</h3>
+            <p><strong>For technical issues or questions:</strong></p>
+            <ul class="feature-list">
+                <li>Check this training guide for step-by-step instructions</li>
+                <li>Review the role-specific sections for your user type</li>
+                <li>Clear browser cache and try again (Ctrl+Shift+Delete)</li>
+                <li>Restart your browser</li>
+                <li>Contact system administrator for account or permission issues</li>
+            </ul>
+
+            <div class="role-box">
+                <strong>Key System Details:</strong><br/>
+                • ERP System: http://localhost:8000/erp (or Netlify URL)<br/>
+                • Driver Portal: http://localhost:8000/driver-login<br/>
+                • Backend: Node.js/Express<br/>
+                • Database: Supabase (PostgreSQL) with SQLite sync<br/>
+                • Auto-sync: Every 5 minutes for vehicles and drivers
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SECTION 11 -->
+        <div class="section">
+            <h2>11. QUICK REFERENCE GUIDE</h2>
+
+            <h3>Role Passwords</h3>
+            <table>
+                <tr>
+                    <th>Role</th>
+                    <th>Password</th>
+                </tr>
+                <tr>
+                    <td>CEO</td>
+                    <td><strong>CEO@1234</strong></td>
+                </tr>
+                <tr>
+                    <td>HR & Fleet Manager</td>
+                    <td><strong>HR@1234</strong></td>
+                </tr>
+                <tr>
+                    <td>Executive Secretary</td>
+                    <td><strong>SEC@1234</strong></td>
+                </tr>
+                <tr>
+                    <td>Company Accountant</td>
+                    <td><strong>ACCT@1234</strong></td>
+                </tr>
+                <tr>
+                    <td>Driver</td>
+                    <td><strong>FirstName@123</strong> (e.g., Edward@123)</td>
+                </tr>
+            </table>
+
+            <h3>URL Shortcuts</h3>
+            <div class="role-box">
+                <strong>Public Website:</strong> http://localhost:8000 (or Netlify URL)<br/>
+                <strong>Driver Login:</strong> http://localhost:8000/driver-login<br/>
+                <strong>ERP System:</strong> http://localhost:8000/erp<br/>
+                <strong>Driver Earnings:</strong> http://localhost:8000/driver-earnings<br/>
+                <strong>Rent-to-Own Portal:</strong> http://localhost:8000/driver-rent-to-own
+            </div>
+
+            <h3>Key Keyboard Shortcuts</h3>
+            <div class="role-box">
+                <strong>In Browser:</strong><br/>
+                • Ctrl+F5 or Cmd+Shift+R = Hard refresh (clear cache)<br/>
+                • Ctrl+P = Print or save as PDF<br/>
+                • F12 = Developer tools<br/>
+                • Ctrl+Shift+Delete = Clear browser cache<br/><br/>
+                <strong>In Forms:</strong><br/>
+                • Tab = Move to next field<br/>
+                • Enter = Submit form<br/>
+                • Escape = Close modal
+            </div>
+
+            <h3>Common Menu Navigation</h3>
+            <p><strong>Left Sidebar Menu Structure:</strong></p>
+            <ul class="feature-list">
+                <li><strong>Overview</strong> → Dashboard</li>
+                <li><strong>Operations</strong> → Drivers, Fleet, Jobs, Deliveries, Weekly Logs</li>
+                <li><strong>Finance</strong> → Payments, Invoices, Quotations, RTO Driver Submissions, Pending RTO, Rent-to-Own</li>
+                <li><strong>People</strong> → Human Resources, Recruitment</li>
+                <li><strong>Maintenance</strong> → Auto Mechanics</li>
+                <li><strong>Analytics</strong> → Reports and analytics</li>
+            </ul>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>BLACKBIRD ERP System - Complete Training Guide | Version 1.0 | Generated April 2026</p>
+            <p>For updates and support, contact your system administrator</p>
+        </div>
+    </div>
+
+    <script>
+        // Print-friendly styles
+        window.print = function() {
+            window.alert('Open this page in Edge and use Ctrl+P or right-click → Print to save as PDF');
+        };
+    </script>
+</body>
+</html>
