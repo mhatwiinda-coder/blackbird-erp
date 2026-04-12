@@ -92,7 +92,7 @@ exports.handler = async (event, context) => {
 
       // Try to find driver user account
       let { data: users, error: fetchError } = await supabase
-        .from('driver_users')
+        .from('driver_accounts')
         .select('*')
         .eq('driver_id', driverIdInt);
 
@@ -125,7 +125,7 @@ exports.handler = async (event, context) => {
 
         // Create driver user account
         const { error: insertError } = await supabase
-          .from('driver_users')
+          .from('driver_accounts')
           .insert([{
             driver_id: driverIdInt,
             password_hash: passwordHash,
@@ -136,7 +136,7 @@ exports.handler = async (event, context) => {
 
         // Re-fetch the user
         const { data: newUsers } = await supabase
-          .from('driver_users')
+          .from('driver_accounts')
           .select('*')
           .eq('driver_id', driverIdInt);
 
