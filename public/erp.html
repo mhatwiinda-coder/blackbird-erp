@@ -2162,12 +2162,36 @@ function refreshDashboardData() {
   // Fetch alerts from API
   Promise.all([
     apiCall('/dashboard/alerts'),
+    apiCall('/vehicle-maintenance-alerts'),
     apiCall('/dashboard/monthly-revenue'),
     apiCall('/dashboard/top-drivers')
-  ]).then(([alertsRes, monthlyRes, driversRes]) => {
+  ]).then(([alertsRes, maintenanceRes, monthlyRes, driversRes]) => {
     const alertList = document.getElementById('vehicle-alerts-list');
-    const alerts = alertsRes.alerts || [];
-    const alertItems = alerts.map(a => `<div class="alert alert-warn"><i class="fas fa-exclamation-triangle"></i> ${a.message}</div>`);
+    const systemAlerts = alertsRes.alerts || [];
+    const maintenanceAlerts = maintenanceRes.data || [];
+
+    // Combine alerts and sort by severity/date
+    const allAlerts = [
+      ...systemAlerts.map(a => ({ ...a, type: 'system', severity: 'warn' })),
+      ...maintenanceAlerts.map(a => ({ ...a, type: 'maintenance' }))
+    ];
+
+    // Create alert items with proper styling
+    const alertItems = allAlerts.map(a => {
+      let badgeClass = 'alert-warn';
+      let icon = '⚠️';
+
+      if (a.type === 'maintenance') {
+        icon = a.icon || '🛞';
+        if (a.severity === 'critical') badgeClass = 'alert-bad';
+        else if (a.severity === 'urgent') badgeClass = 'alert-bad';
+        else badgeClass = 'alert-warn';
+      }
+
+      const daysText = a.days_until_due ? ` (${a.days_until_due} day${a.days_until_due === 1 ? '' : 's'})` : '';
+      return `<div class="alert ${badgeClass}"><i class="fas fa-exclamation-triangle"></i> ${icon} ${a.message}${daysText}</div>`;
+    });
+
     alertList.innerHTML = alertItems.length ? alertItems.join('') : '<p style="color:var(--text2);font-size:13px">All vehicles OK ✓</p>';
 
     // Monthly Revenue Chart

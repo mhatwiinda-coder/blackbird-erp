@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Motorbike Fleet | Blackbird Logistics</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--gold:#F28C28;--gold2:#ffa94d;--dark:#07090d;--dark2:#0d1017;--dark3:#121620;--surface:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);--text:#e8eaf0;--text2:#8a90a8;--font-display:'Bebas Neue',sans-serif;--font-body:'Outfit',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{font-family:var(--font-body);background:var(--dark);color:var(--text);overflow-x:hidden;}
+header{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 60px;height:72px;background:rgba(7,9,13,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;}.logo img{height:52px;filter:drop-shadow(0 0 8px rgba(242,140,40,0.4));transition:filter 0.3s;}.logo img:hover{filter:drop-shadow(0 0 18px rgba(242,140,40,0.8));}
+.logo-text{font-family:var(--font-display);font-size:22px;letter-spacing:3px;color:var(--gold);line-height:1;}.logo-sub{font-size:9px;letter-spacing:4px;color:var(--text2);text-transform:uppercase;}
+nav{display:flex;align-items:center;gap:36px;}nav a{color:var(--text2);text-decoration:none;font-size:13px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;transition:color 0.3s;position:relative;}
+nav a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width 0.3s;}nav a:hover{color:var(--text);}nav a:hover::after{width:100%;}
+.nav-erp{background:var(--gold);color:#000!important;padding:8px 20px;border-radius:4px;font-weight:700!important;}.nav-erp:hover{background:var(--gold2)!important;}.nav-erp::after{display:none!important;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:1002;}.hamburger span{width:26px;height:2px;background:var(--text);transition:0.3s;display:block;}
+.service-hero{position:relative;height:520px;overflow:hidden;margin-top:72px;}
+.slider{position:absolute;width:100%;height:100%;}.slide{position:absolute;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease;}.slide.active{opacity:1;}.slide img{width:100%;height:100%;object-fit:cover;}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(7,9,13,0.85) 40%,rgba(7,9,13,0.3));z-index:1;}
+.hero-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:60px;display:flex;flex-direction:column;gap:12px;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;}.hero-tag::before{content:'';width:24px;height:1px;background:var(--gold);}
+.hero-content h1{font-family:var(--font-display);font-size:clamp(44px,6vw,80px);letter-spacing:2px;line-height:0.95;color:var(--text);}
+.slider-dots{position:absolute;bottom:24px;right:60px;z-index:3;display:flex;gap:8px;}.dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,0.3);transition:width 0.4s,background 0.4s;cursor:pointer;}.dot.active{width:22px;background:var(--gold);}
+.service-content{padding:100px 60px;max-width:1100px;margin:auto;}
+.service-content h2{font-family:var(--font-display);font-size:36px;letter-spacing:1px;color:var(--gold);margin-bottom:16px;margin-top:48px;}.service-content h2:first-child{margin-top:0;}
+.service-content p{color:var(--text2);line-height:1.85;font-size:16px;margin-bottom:16px;}
+.service-content ul{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.service-content ul li{display:flex;align-items:center;gap:12px;color:var(--text2);font-size:15px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;transition:border-color 0.3s,transform 0.3s;}
+.service-content ul li:hover{border-color:rgba(242,140,40,0.3);transform:translateX(6px);}.service-content ul li::before{content:'✦';color:var(--gold);font-size:10px;flex-shrink:0;}
+.quote-section{position:relative;padding:100px 60px;overflow:hidden;background:var(--dark3);}
+.stars-wrap{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.stars-layer{position:absolute;top:0;left:0;width:1px;height:1px;background:transparent;}
+.stars-layer.s1{box-shadow:120px 340px #fff,450px 80px #fff,780px 220px #fff,1100px 160px #fff,230px 600px #fff,890px 440px #fff,1350px 290px #fff,560px 720px #fff,75px 130px #fff,990px 55px #fff,1480px 380px #fff,320px 480px #fff;animation:starsRise 50s linear infinite;}
+.stars-layer.s2{width:2px;height:2px;box-shadow:200px 180px #fff,560px 420px #fff,940px 260px #fff,1320px 540px #fff,380px 700px #fff,720px 80px #fff;animation:starsRise 100s linear infinite;}
+.stars-layer.s3{width:3px;height:3px;box-shadow:300px 500px rgba(255,255,255,0.5),750px 200px rgba(255,255,255,0.5),1200px 680px rgba(255,255,255,0.5);animation:starsRise 150s linear infinite;}
+.stars-layer::after{content:'';position:absolute;top:2000px;left:0;width:inherit;height:inherit;background:transparent;box-shadow:inherit;}
+@keyframes starsRise{from{transform:translateY(0)}to{transform:translateY(-2000px)}}
+.quote-inner{position:relative;z-index:1;max-width:900px;margin:auto;}.quote-inner h2{font-family:var(--font-display);font-size:36px;letter-spacing:1px;margin-bottom:32px;color:var(--text);}
+.quote-form{display:grid;grid-template-columns:1fr 1fr;gap:16px;}.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group label{font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:1px;}
+.form-group input,.form-group select{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:12px 16px;font-size:14px;font-family:var(--font-body);outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus{border-color:var(--gold);}.form-group select option{background:var(--dark3);}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:var(--font-body);transition:all 0.2s;}
+.btn-gold{background:var(--gold);color:#000;}.btn-gold:hover{background:var(--gold2);transform:translateY(-2px);}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text2);}.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.btn-wa{background:#25D366;color:#fff;}.btn-wa:hover{background:#1ebe5d;transform:translateY(-2px);}
+.quote-result{margin-top:28px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;display:none;position:relative;overflow:hidden;}
+.quote-result.show{display:block;}.quote-result::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);}
+.result-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.result-logo{display:flex;align-items:center;gap:10px;}.result-logo img{height:36px;}.result-company{font-family:var(--font-display);font-size:18px;color:var(--gold);}
+.certified{border:2px solid var(--gold);color:var(--gold);padding:4px 14px;font-size:11px;font-weight:700;letter-spacing:2px;transform:rotate(-8deg);display:inline-block;opacity:0.85;}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin-bottom:20px;}
+.result-item label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;}.result-item p{font-size:14px;color:var(--text);font-weight:500;}
+.result-price{font-family:var(--font-display);font-size:40px;color:var(--gold);letter-spacing:1px;margin-top:8px;}.result-price span{font-size:16px;color:var(--text2);font-family:var(--font-body);}
+.service-cta{padding:100px 60px;text-align:center;background:var(--dark2);position:relative;overflow:hidden;}
+.service-cta::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(242,140,40,0.06),transparent 50%);}
+.service-cta h2{font-family:var(--font-display);font-size:clamp(36px,5vw,60px);letter-spacing:2px;margin-bottom:16px;}
+.service-cta p{color:var(--text2);font-size:16px;margin-bottom:36px;}
+footer{background:#000;padding:32px 60px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);flex-wrap:wrap;gap:16px;}
+.footer-logo{font-family:var(--font-display);font-size:16px;letter-spacing:3px;color:var(--gold);}.footer-copy{font-size:13px;color:var(--text2);}
+.whatsapp-float{position:fixed;bottom:28px;right:28px;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;color:white;text-decoration:none;z-index:900;box-shadow:0 8px 24px rgba(37,211,102,0.35);transition:transform 0.3s;}.whatsapp-float:hover{transform:scale(1.12);}
+@media(max-width:900px){header{padding:0 24px;}nav{display:none;flex-direction:column;position:fixed;top:72px;right:0;bottom:0;width:260px;background:var(--dark3);border-left:1px solid var(--border);padding:40px 30px;gap:28px;z-index:999;}nav.open{display:flex;}.hamburger{display:flex;}.hero-content{padding:40px 24px;}.service-content{padding:60px 24px;}.quote-section{padding:60px 24px;}.quote-form{grid-template-columns:1fr;}.result-grid{grid-template-columns:1fr;}.service-cta{padding:60px 24px;}footer{padding:24px;flex-direction:column;text-align:center;}.slider-dots{right:24px;}}
+</style>
+</head>
+<body>
+
+<header id="header">
+  <a href="../index.html" class="logo"><img src="../images/logo.png" alt=""/><div><div class="logo-text">Blackbird</div><div class="logo-sub">Logistics</div></div></a>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  <nav id="navMenu"><a href="../index.html">Home</a><a href="../index.html#services">Services</a><a href="../staff.html">Our Staff</a><a href="../index.html#contact">Contact</a><a href="../erp.html" class="nav-erp">Staff Portal</a></nav>
+</header>
+<section class="service-hero">
+  <div class="slider"><div class="slide active"><img src="../images/mf1.jpeg" alt=""/></div>
+<div class="slide"><img src="../images/mf2.png" alt=""/></div>
+<div class="slide"><img src="../images/mf3.png" alt=""/></div>
+<div class="slide"><img src="../images/mf4.jpeg" alt=""/></div>
+</div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content"><div class="hero-tag">Our Services</div><h1>Motorbike<br/>Fleet</h1></div>
+  <div class="slider-dots" id="sliderDots"></div>
+</section>
+<section class="service-content">
+  <h2>About This Service</h2><p>Blackbird Logistics operates a professional motorbike fleet designed for fast urban logistics, courier deliveries and rapid transport of small parcels. Our riders are trained to deliver efficiently while maintaining high safety and customer service standards.</p>
+  <h2>Fleet Services</h2><ul><li>Same-day parcel delivery</li><li>Retail and restaurant deliveries</li><li>Business courier services</li><li>Last-mile delivery logistics</li><li>Dedicated fleet support for companies</li></ul>
+</section>
+<section class="quote-section">
+  <div class="stars-wrap"><div class="stars-layer s1"></div><div class="stars-layer s2"></div><div class="stars-layer s3"></div></div>
+  <div class="quote-inner">
+    <h2>Estimate Delivery Request</h2>
+    <div class="quote-form">
+
+      <div class="form-group"><label>Full Name</label><input id="name" placeholder="e.g. John Banda"/></div>
+      <div class="form-group"><label>Phone Number</label><input id="phone" placeholder="e.g. 0977 000 000"/></div>
+      <div class="form-group"><label>Pickup Location</label><input id="pickup" placeholder="e.g. Lusaka CBD"/></div>
+      <div class="form-group"><label>Destination</label><input id="destination" placeholder="e.g. Ibex Hill"/></div>
+      <div class="form-group"><label>Number of Packages</label><input type="number" id="packages" placeholder="e.g. 3"/></div>
+      <div class="form-group"><label>Date</label><input type="date" id="date"/></div>
+      <div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn btn-gold" style="width:100%" onclick="generateQuote()"><i class="fas fa-calculator"></i> Generate Quote</button></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="generatePDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
+      <button class="btn btn-wa" onclick="sendWhatsApp()"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button>
+    </div>
+    <div class="quote-result" id="quoteResult">
+      <div class="result-header">
+        <div class="result-logo"><img src="../images/logo.png" onerror="this.style.display='none'" alt=""/><div><div class="result-company">BLACKBIRD LOGISTICS</div><div style="font-size:12px;color:var(--text2)">Delivery Estimate</div></div></div>
+        <div class="certified">CERTIFIED</div>
+      </div>
+      <div class="result-grid" id="resultGrid"></div>
+      <div class="result-price" id="resultPrice"></div>
+    </div>
+  </div>
+</section>
+<section class="service-cta"><h2>Request Motorbike Delivery</h2><p>Fast, reliable last-mile delivery across Lusaka. Contact us now.</p><a href="https://wa.me/260973902239?text=Hello%20Blackbird%20Logistics%20I%20need%20motorbike%20delivery" class="btn btn-gold" target="_blank"><i class="fab fa-whatsapp"></i> Contact on WhatsApp</a></section>
+<footer><div class="footer-logo">BLACKBIRD LOGISTICS</div><div class="footer-copy">© 2026 Blackbird Logistics. All rights reserved.</div></footer>
+<a href="https://wa.me/260770295912" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<script>
+
+function toggleMenu(){document.getElementById('navMenu').classList.toggle('open');document.getElementById('hamburger').classList.toggle('open');}
+window.addEventListener('scroll',()=>document.getElementById('header').style.background=window.scrollY>50?'rgba(7,9,13,0.98)':'rgba(7,9,13,0.85)');
+const slides=document.querySelectorAll('.slide');const dotsWrap=document.getElementById('sliderDots');let cur=0;
+slides.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>goSlide(i);dotsWrap.appendChild(d);});
+function goSlide(n){slides[cur].classList.remove('active');dotsWrap.children[cur].classList.remove('active');cur=(n+slides.length)%slides.length;slides[cur].classList.add('active');dotsWrap.children[cur].classList.add('active');}
+setInterval(()=>goSlide(cur+1),4500);
+
+let quoteData={};
+function generateQuote(){
+
+  const name=document.getElementById('name').value;
+  const phone=document.getElementById('phone').value;
+  const pickup=document.getElementById('pickup').value;
+  const destination=document.getElementById('destination').value;
+  const packages=Number(document.getElementById('packages').value)||1;
+  if(!name||!pickup){alert('Please enter your name and pickup location.');return;}
+  const price=150+(packages*20);
+  quoteData={name,phone,pickup,destination,packages,price};
+  document.getElementById('resultGrid').innerHTML=`<div class="result-item"><label>Customer</label><p>${name}</p></div><div class="result-item"><label>Phone</label><p>${phone||'—'}</p></div><div class="result-item"><label>Pickup</label><p>${pickup}</p></div><div class="result-item"><label>Destination</label><p>${destination||'—'}</p></div><div class="result-item"><label>Packages</label><p>${packages}</p></div>`;
+  document.getElementById('resultPrice').innerHTML=`ZMW ${price.toLocaleString()} <span>estimated</span>`;
+  document.getElementById('quoteResult').classList.add('show');
+}
+function generatePDF(){
+  if(!quoteData.price){alert('Generate a quote first.');return;}
+  const {jsPDF}=window.jspdf;const doc=new jsPDF();
+  doc.setFontSize(18);doc.text('Blackbird Logistics',20,20);
+  doc.setFontSize(12);doc.text('Delivery Estimate',20,30);
+  doc.setFontSize(10);doc.text('Generated: '+new Date().toLocaleString(),130,20);
+  doc.line(20,38,190,38);doc.setFontSize(12);
+  doc.text('Customer: '+quoteData.name,20,52);doc.text('Phone: '+(quoteData.phone||'—'),20,62);
+  doc.text('Pickup: '+(quoteData.pickup||'—'),20,72);doc.text('Destination: '+(quoteData.destination||'—'),20,82);doc.text('Packages: '+quoteData.packages,20,92);
+  doc.setFontSize(16);doc.setTextColor(242,140,40);doc.text('Estimated Price: ZMW '+quoteData.price,20,115);
+  doc.setTextColor(0,0,0);doc.setFontSize(10);doc.text('Blackbird Logistics | +260 973 902 239 | Ibex Hill, Lusaka',20,270);
+  doc.save('blackbird-quote.pdf');
+}
+function sendWhatsApp(){
+  if(!quoteData.price){alert('Generate a quote first.');return;}
+  const msg=`Hello Blackbird Logistics,\\nMotorbike Delivery Quote\\nPickup: ${quoteData.pickup}\\nDestination: ${quoteData.destination||'—'}\\nPackages: ${quoteData.packages}\\nEstimated Price: ZMW ${quoteData.price}`;
+  window.open('https://wa.me/260973902239?text='+encodeURIComponent(msg),'_blank');
+}
+</script>
+</body>
+</html>
