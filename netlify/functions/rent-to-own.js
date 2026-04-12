@@ -56,24 +56,33 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // GET /api/rent-to-own/available-drivers - Get drivers and vehicles for dropdown
+    // GET /api/rent-to-own/available-drivers - Get all drivers for dropdown
     if (httpMethod === 'GET' && segment === 'available-drivers') {
       const { data: drivers, error: driverError } = await supabase
         .from('drivers')
         .select('id, name')
         .order('name', { ascending: true });
 
+      if (driverError) throw driverError;
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ data: drivers || [] })
+      };
+    }
+
+    // GET /api/rent-to-own/available-vehicles - Get all vehicles for dropdown
+    if (httpMethod === 'GET' && segment === 'available-vehicles') {
       const { data: vehicles, error: vehicleError } = await supabase
         .from('vehicles')
         .select('id, plate, make_model')
         .order('plate', { ascending: true });
 
-      if (driverError) throw driverError;
       if (vehicleError) throw vehicleError;
 
       return {
         statusCode: 200,
-        body: JSON.stringify({ drivers: drivers || [], vehicles: vehicles || [] })
+        body: JSON.stringify({ data: vehicles || [] })
       };
     }
 

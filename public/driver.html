@@ -995,7 +995,7 @@
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${currentDriver.token}`
             },
-            body: JSON.stringify({ amount, week, month, notes: notes || null })
+            body: JSON.stringify({ driver_id: currentDriver.driverId, amount, week, month, notes: notes || null })
         })
         .then(r => r.json())
         .then(data => {
@@ -1348,7 +1348,7 @@
             const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
         const apiHost = baseUrl;
             const response = await fetch(
-                `${apiHost}/api/rent-to-own/${selectedRtoAgreement.id}/submit-for-approval`,
+                `${apiHost}/api/rent-to-own/${selectedRtoAgreement.id}/record-payment`,
                 {
                     method: 'POST',
                     headers: {
@@ -1356,10 +1356,9 @@
                         'Authorization': `Bearer ${currentDriver.token}`
                     },
                     body: JSON.stringify({
-                        payment_amount: amount,
+                        amount,
                         payment_date: paymentDate,
-                        notes: notes || null,
-                        driver_id: currentDriver.driverId
+                        notes: notes || null
                     })
                 }
             );

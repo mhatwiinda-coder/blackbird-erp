@@ -3230,7 +3230,7 @@ async function openRtoModal() {
       }
     });
 
-    const vehiclesResponse = await fetch(`${baseUrl}/api/rent-to-own/available-drivers`, {
+    const vehiclesResponse = await fetch(`${baseUrl}/api/rent-to-own/available-vehicles`, {
       headers: {
         'Authorization': `Bearer ${authToken || 'test'}`
       }
@@ -3263,8 +3263,8 @@ async function openRtoModal() {
     const vehicleSelect = document.getElementById('rto-vehicle');
     if (vehicles.length > 0) {
       vehicleSelect.innerHTML = '<option value="">Select Vehicle...</option>' +
-        vehicles.map(v => `<option value="${v.id}">${v.plate} - ${v.type}</option>`).join('');
-      vehicleSelect.size = Math.min(vehicles.length + 1, 10); // Show up to 10 options, all 34 will be scrollable
+        vehicles.map(v => `<option value="${v.id}">${v.plate} (${v.make_model})</option>`).join('');
+      vehicleSelect.size = Math.min(vehicles.length + 1, 10); // Show up to 10 options, all 41 will be scrollable
       console.log(`[RTO MODAL] Loaded ${vehicles.length} vehicles in dropdown`);
     } else {
       vehicleSelect.innerHTML = '<option value="">No vehicles available</option>';
@@ -3481,25 +3481,25 @@ let rtoSubmissionsSelectedIds = new Set();
 
 async function renderRtoSubmissions() {
   try {
-    const result = await apiCall('/rent-to-own/approvals/pending');
-    rtoSubmissions = (result.data || []).filter(p => p.payment_type === 'Driver Submission');
+    const result = await apiCall('/driver-submissions');
+    rtoSubmissions = result.data || [];
 
     document.getElementById('rto-submissions-tbody').innerHTML = rtoSubmissions.map(s => `
       <tr>
         <td style="width:30px;"><input type="checkbox" value="${s.id}" onchange="toggleRtoSubmissionSelect(this)"/></td>
-        <td><strong>${s.driver_name || 'Unknown'}</strong></td>
-        <td>${s.vehicle_plate || 'N/A'}</td>
-        <td>${s.agreement_id}</td>
-        <td>${fmtK(s.payment_amount)}</td>
-        <td>${new Date(s.created_at).toLocaleDateString()}</td>
+        <td><strong>${s.driver?.name || 'Unknown'}</strong></td>
+        <td>-</td>
+        <td>-</td>
+        <td>${fmtK(s.amount)}</td>
+        <td>${new Date(s.submission_date).toLocaleDateString()}</td>
         <td><em>${s.notes || '-'}</em></td>
-        <td>${badgeStatus(s.approval_status)}</td>
+        <td>${badgeStatus(s.submission_status)}</td>
         <td>
-          ${s.approval_status === 'pending' ? `
-            <button class="btn btn-sm btn-success" onclick="showRtoSubmissionApproval(${s.id})"><i class="fas fa-check"></i></button>
-            <button class="btn btn-sm btn-danger" onclick="rejectRtoSubmission(${s.id})"><i class="fas fa-times"></i></button>
+          ${s.submission_status === 'Pending' ? `
+            <button class="btn btn-sm btn-success" onclick="approveDriverSubmission(${s.id})"><i class="fas fa-check"></i> Approve</button>
+            <button class="btn btn-sm btn-danger" onclick="rejectDriverSubmission(${s.id})"><i class="fas fa-times"></i> Reject</button>
           ` : `
-            <span style="color:var(--text2);font-size:12px;">${s.approval_status === 'approved' ? '✓ Approved' : '✗ Rejected'}</span>
+            <span style="color:var(--text2);font-size:12px;">${s.submission_status === 'Approved' ? '✓ Approved' : '✗ Rejected'}</span>
           `}
         </td>
       </tr>
@@ -3507,7 +3507,7 @@ async function renderRtoSubmissions() {
 
     updateRtoSubmissionsBadge();
   } catch (error) {
-    console.error('Failed to render RTO submissions:', error);
+    console.error('Failed to render driver submissions:', error);
   }
 }
 
@@ -4929,7 +4929,7 @@ async function approveDriverSubmission(submissionId) {
     }
 
     // Reload submissions list
-    loadDriverSubmissions();
+    await renderRtoSubmissions();
     alert('✓ Submission approved successfully!');
   } catch (err) {
     alert('Error approving submission: ' + err.message);
@@ -4964,7 +4964,7 @@ async function rejectDriverSubmission(submissionId) {
       throw new Error(error.error || 'Failed to reject');
     }
 
-    loadDriverSubmissions();
+    await renderRtoSubmissions();
     alert('✓ Submission rejected');
   } catch (err) {
     alert('Error rejecting submission: ' + err.message);
