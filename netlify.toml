@@ -12,8 +12,68 @@
   publish = "."
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/api/auth/*"
+  to = "/.netlify/functions/auth"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/rent-to-own*"
+  to = "/.netlify/functions/rent-to-own"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/driver-submissions*"
+  to = "/.netlify/functions/driver-submissions"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/payments*"
+  to = "/.netlify/functions/payments"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/drivers*"
+  to = "/.netlify/functions/drivers"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/quotations*"
+  to = "/.netlify/functions/quotations"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/invoices*"
+  to = "/.netlify/functions/invoices"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/jobs*"
+  to = "/.netlify/functions/jobs"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/deliveries*"
+  to = "/.netlify/functions/deliveries"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/logs*"
+  to = "/.netlify/functions/logs"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/dashboard*"
+  to = "/.netlify/functions/dashboard"
   status = 200
   force = true
 
