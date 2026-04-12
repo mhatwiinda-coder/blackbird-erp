@@ -56,6 +56,27 @@ exports.handler = async (event, context) => {
       };
     }
 
+    // GET /api/rent-to-own/available-drivers - Get drivers and vehicles for dropdown
+    if (httpMethod === 'GET' && segment === 'available-drivers') {
+      const { data: drivers, error: driverError } = await supabase
+        .from('drivers')
+        .select('id, name')
+        .order('name', { ascending: true });
+
+      const { data: vehicles, error: vehicleError } = await supabase
+        .from('vehicles')
+        .select('id, plate, make_model')
+        .order('plate', { ascending: true });
+
+      if (driverError) throw driverError;
+      if (vehicleError) throw vehicleError;
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ drivers: drivers || [], vehicles: vehicles || [] })
+      };
+    }
+
     // GET /api/rent-to-own/:id - Single agreement with payment history
     if (httpMethod === 'GET' && id && !segment) {
       const { data, error } = await supabase
@@ -87,28 +108,28 @@ exports.handler = async (event, context) => {
 
     // POST /api/rent-to-own - Create agreement
     if (httpMethod === 'POST' && !segment) {
-      const { driver_id, vehicle_id, total_price, down_payment } = JSON.parse(body);
+      const { driver_id, vehicle_id, total_amount, monthly_installment, start_date, expected_completion_date, notes } = JSON.parse(body);
 
-      if (!driver_id || !vehicle_id || !total_price) {
+      if (!driver_id || !vehicle_id || !total_amount) {
         return {
           statusCode: 400,
-          body: JSON.stringify({ error: 'Missing required fields' })
+          body: JSON.stringify({ error: 'Missing required fields: driver_id, vehicle_id, total_amount' })
         };
       }
 
-      const remaining_balance = total_price - (down_payment || 0);
-      const paid_amount = down_payment || 0;
+      const remaining_balance = total_amount;
+      const paid_amount = 0;
 
       const { data, error } = await supabase
         .from('rent_to_own_agreements')
         .insert([{
           driver_id,
           vehicle_id,
-          total_price,
+          total_price: total_amount,
           paid_amount,
           remaining_balance,
           agreement_status: 'Active',
-          agreement_date: new Date().toISOString().split('T')[0]
+          agreement_date: start_date || new Date().toISOString().split('T')[0]
         }])
         .select();
 
