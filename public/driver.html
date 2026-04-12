@@ -920,8 +920,8 @@
 
         errorEl.classList.remove('show');
 
-        const apiHost = `${window.location.protocol}//${window.location.hostname}:8000`;
-        fetch(`${apiHost}/api/auth/driver-login`, {
+        const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+        fetch(`${baseUrl}/api/auth/driver-login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ driverId, password })
@@ -987,7 +987,8 @@
             return;
         }
 
-        const apiHost = `${window.location.protocol}//${window.location.hostname}:8000`;
+        const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+        const apiHost = baseUrl;
         fetch(`${apiHost}/api/driver-submissions`, {
             method: 'POST',
             headers: {
@@ -1025,7 +1026,8 @@
         const status = document.getElementById('status-filter').value;
         try {
             // Fetch payments from Supabase backend
-            const apiHost = `${window.location.protocol}//${window.location.hostname}:8000`;
+            const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+        const apiHost = baseUrl;
             const url = `${apiHost}/api/payments?driver_id=${currentDriver.driverId}`;
             const response = await fetch(url, {
                 method: 'GET',
@@ -1074,7 +1076,8 @@
     // ===== VIEW PAYMENT DETAILS =====
     async function viewPaymentDetails(id) {
         try {
-            const response = await fetch(`http://localhost:8000/api/payments/${id}`, {
+            const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+            const response = await fetch(`${baseUrl}/api/payments/${id}`, {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${currentDriver.token}` }
             });
@@ -1134,7 +1137,8 @@
 
     // ===== UPDATE SUMMARY =====
     function updateSummary() {
-        const apiHost = `${window.location.protocol}//${window.location.hostname}:8000`;
+        const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+        const apiHost = baseUrl;
         fetch(`${apiHost}/api/driver-submissions/my-submissions?status=pending&limit=1000`, {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${currentDriver.token}` }
@@ -1202,7 +1206,8 @@
 
     async function loadRtoAgreements() {
         try {
-            const apiHost = `${window.location.protocol}//${window.location.hostname}:8000`;
+            const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+        const apiHost = baseUrl;
             const response = await fetch(
                 `${apiHost}/api/rent-to-own?driver_id=${currentDriver.driverId}&status=Active`,
                 {
@@ -1340,7 +1345,8 @@
         submitBtn.textContent = 'Submitting for Approval...';
 
         try {
-            const apiHost = `${window.location.protocol}//${window.location.hostname}:8000`;
+            const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+        const apiHost = baseUrl;
             const response = await fetch(
                 `${apiHost}/api/rent-to-own/${selectedRtoAgreement.id}/submit-for-approval`,
                 {
