@@ -38,16 +38,16 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // GET /api/rent-to-own/approvals/pending - Pending approvals
+    // GET /api/rent-to-own/approvals/pending - Recent pending payments
     if (httpMethod === 'GET' && segment === 'approvals' && pathSegments[1] === 'pending') {
       const { data, error } = await supabase
         .from('rent_to_own_payments')
         .select(`
           *,
-          agreement:rent_to_own_agreements(total_price, paid_amount, remaining_balance, agreement_status, driver:drivers(name), vehicle:vehicles(plate, make_model))
+          agreement:rent_to_own_agreements(total_price, paid_amount, remaining_balance, agreement_status, driver_id, vehicle_id, driver:drivers(name), vehicle:vehicles(plate, make_model))
         `)
-        .eq('approval_status', 'pending')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(20);
 
       if (error) throw error;
       return {
@@ -56,7 +56,7 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // GET /api/rent-to-own/:id - Single agreement
+    // GET /api/rent-to-own/:id - Single agreement with payment history
     if (httpMethod === 'GET' && id && !segment) {
       const { data, error } = await supabase
         .from('rent_to_own_agreements')
@@ -75,7 +75,7 @@ exports.handler = async (event, context) => {
         .from('rent_to_own_payments')
         .select('*')
         .eq('agreement_id', id)
-        .order('created_at', { ascending: false });
+        .order('payment_date', { ascending: false });
 
       if (paymentError) throw paymentError;
 
@@ -108,7 +108,7 @@ exports.handler = async (event, context) => {
           paid_amount,
           remaining_balance,
           agreement_status: 'Active',
-          agreement_date: new Date().toISOString()
+          agreement_date: new Date().toISOString().split('T')[0]
         }])
         .select();
 
@@ -138,7 +138,7 @@ exports.handler = async (event, context) => {
 
     // POST /api/rent-to-own/:id/record-payment - Record payment
     if (httpMethod === 'POST' && id && pathSegments[1] === 'record-payment') {
-      const { payment_amount, notes } = JSON.parse(body);
+      const { amount, payment_method } = JSON.parse(body);
 
       // Get current agreement
       const { data: agreement, error: agreeError } = await supabase
@@ -149,8 +149,8 @@ exports.handler = async (event, context) => {
 
       if (agreeError) throw agreeError;
 
-      const new_paid = agreement.paid_amount + payment_amount;
-      const new_remaining = agreement.remaining_balance - payment_amount;
+      const new_paid = agreement.paid_amount + amount;
+      const new_remaining = agreement.remaining_balance - amount;
       const is_completed = new_remaining <= 0;
 
       // Record payment
@@ -158,10 +158,9 @@ exports.handler = async (event, context) => {
         .from('rent_to_own_payments')
         .insert([{
           agreement_id: id,
-          driver_id: agreement.driver_id,
-          payment_amount,
-          notes,
-          approval_status: 'approved',
+          amount,
+          payment_method: payment_method || 'cash',
+          payment_date: new Date().toISOString().split('T')[0],
           created_at: new Date().toISOString()
         }])
         .select();
@@ -194,46 +193,7 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // POST /api/rent-to-own/:id/approve-payment/:payment_id
-    if (httpMethod === 'POST' && id && pathSegments[1] === 'approve-payment') {
-      const payment_id = pathSegments[2];
-
-      const { data, error } = await supabase
-        .from('rent_to_own_payments')
-        .update({ approval_status: 'approved', approved_at: new Date().toISOString() })
-        .eq('id', payment_id)
-        .select();
-
-      if (error) throw error;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ data: data[0] })
-      };
-    }
-
-    // POST /api/rent-to-own/:id/reject-payment/:payment_id
-    if (httpMethod === 'POST' && id && pathSegments[1] === 'reject-payment') {
-      const payment_id = pathSegments[2];
-      const { rejection_reason } = JSON.parse(body);
-
-      const { data, error } = await supabase
-        .from('rent_to_own_payments')
-        .update({
-          approval_status: 'rejected',
-          rejection_reason,
-          rejected_at: new Date().toISOString()
-        })
-        .eq('id', payment_id)
-        .select();
-
-      if (error) throw error;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ data: data[0] })
-      };
-    }
-
-    // DELETE /api/rent-to-own/:id
+    // DELETE /api/rent-to-own/:id - Delete agreement
     if (httpMethod === 'DELETE' && id && !segment) {
       const { error } = await supabase
         .from('rent_to_own_agreements')
@@ -243,7 +203,7 @@ exports.handler = async (event, context) => {
       if (error) throw error;
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: 'Deleted successfully' })
+        body: JSON.stringify({ message: 'Agreement deleted' })
       };
     }
 
@@ -251,12 +211,11 @@ exports.handler = async (event, context) => {
       statusCode: 404,
       body: JSON.stringify({ error: 'Endpoint not found' })
     };
-
-  } catch (error) {
-    console.error('Error:', error);
+  } catch (err) {
+    console.error('Error:', err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({ error: err.message })
     };
   }
 };
