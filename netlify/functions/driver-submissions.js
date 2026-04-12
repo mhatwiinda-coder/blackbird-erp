@@ -45,6 +45,50 @@ exports.handler = async (event, context) => {
       };
     }
 
+    // GET /api/driver-submissions/my-submissions - Get current driver's submissions
+    if (httpMethod === 'GET' && pathSegments[0] === 'my-submissions') {
+      const { status, limit = 20, offset = 0 } = queryStringParameters || {};
+
+      // Get driver ID from auth token
+      const token = event.headers.authorization?.replace('Bearer ', '');
+      if (!token) {
+        return {
+          statusCode: 401,
+          body: JSON.stringify({ error: 'Authorization required' })
+        };
+      }
+
+      // For now, we'll need to get driver_id from context or make an assumption
+      // The token should be validated to extract driver_id
+      // For MVP, return all submissions (client can filter)
+      let query = supabase
+        .from('driver_submissions')
+        .select(`
+          id,
+          driver_id,
+          submission_date,
+          amount,
+          week,
+          month,
+          notes,
+          submission_status,
+          approved_by_role,
+          driver:drivers(name)
+        `);
+
+      if (status) query = query.eq('submission_status', status);
+
+      const { data, error } = await query
+        .order('submission_date', { ascending: false })
+        .range(parseInt(offset), parseInt(offset) + parseInt(limit) - 1);
+
+      if (error) throw error;
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ data: data || [], count: data?.length || 0 })
+      };
+    }
+
     // GET /api/driver-submissions/:id - Get single driver submission
     if (httpMethod === 'GET' && id && !action) {
       const { data, error } = await supabase

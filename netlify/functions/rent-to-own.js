@@ -87,7 +87,7 @@ exports.handler = async (event, context) => {
     }
 
     // GET /api/rent-to-own/:id - Single agreement with payment history
-    if (httpMethod === 'GET' && id && !segment) {
+    if (httpMethod === 'GET' && segment && !isNaN(segment) && !id) {
       const { data, error } = await supabase
         .from('rent_to_own_agreements')
         .select(`
@@ -95,7 +95,7 @@ exports.handler = async (event, context) => {
           driver:drivers(name),
           vehicle:vehicles(plate, make_model)
         `)
-        .eq('id', id)
+        .eq('id', parseInt(segment))
         .single();
 
       if (error) throw error;
@@ -104,7 +104,7 @@ exports.handler = async (event, context) => {
       const { data: payments, error: paymentError } = await supabase
         .from('rent_to_own_payments')
         .select('*')
-        .eq('agreement_id', id)
+        .eq('agreement_id', parseInt(segment))
         .order('payment_date', { ascending: false });
 
       if (paymentError) throw paymentError;
@@ -150,13 +150,14 @@ exports.handler = async (event, context) => {
     }
 
     // PUT /api/rent-to-own/:id - Update agreement
-    if (httpMethod === 'PUT' && id && !segment) {
+    if (httpMethod === 'PUT' && segment && !isNaN(segment) && !id) {
       const updateData = JSON.parse(body);
+      const agreementId = parseInt(segment);
 
       const { data, error } = await supabase
         .from('rent_to_own_agreements')
         .update(updateData)
-        .eq('id', id)
+        .eq('id', agreementId)
         .select();
 
       if (error) throw error;
@@ -170,11 +171,12 @@ exports.handler = async (event, context) => {
     if (httpMethod === 'POST' && id && pathSegments[1] === 'record-payment') {
       const { amount, payment_method } = JSON.parse(body);
 
-      // Get current agreement
+      // Get current agreement (use segment as agreement ID, not id)
+      const agreementId = parseInt(segment);
       const { data: agreement, error: agreeError } = await supabase
         .from('rent_to_own_agreements')
         .select('*')
-        .eq('id', id)
+        .eq('id', agreementId)
         .single();
 
       if (agreeError) throw agreeError;
@@ -187,7 +189,7 @@ exports.handler = async (event, context) => {
       const { data: payment, error: payError } = await supabase
         .from('rent_to_own_payments')
         .insert([{
-          agreement_id: id,
+          agreement_id: agreementId,
           amount,
           payment_method: payment_method || 'cash',
           payment_date: new Date().toISOString().split('T')[0],
@@ -212,7 +214,7 @@ exports.handler = async (event, context) => {
       const { data: updated, error: updateError } = await supabase
         .from('rent_to_own_agreements')
         .update(updateData)
-        .eq('id', id)
+        .eq('id', agreementId)
         .select();
 
       if (updateError) throw updateError;
@@ -224,11 +226,12 @@ exports.handler = async (event, context) => {
     }
 
     // DELETE /api/rent-to-own/:id - Delete agreement
-    if (httpMethod === 'DELETE' && id && !segment) {
+    if (httpMethod === 'DELETE' && segment && !isNaN(segment) && !id) {
+      const agreementId = parseInt(segment);
       const { error } = await supabase
         .from('rent_to_own_agreements')
         .delete()
-        .eq('id', id);
+        .eq('id', agreementId);
 
       if (error) throw error;
       return {
