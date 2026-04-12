@@ -13,21 +13,29 @@ exports.handler = async (event, context) => {
     const id = pathSegments[0];
     const action = pathSegments[1];
 
-    // GET /api/driver-submissions - List submissions
+    // GET /api/driver-submissions - List all payments (from payments table)
     if (httpMethod === 'GET' && !id) {
       const { status, limit = 20, offset = 0 } = queryStringParameters || {};
 
       let query = supabase
-        .from('driver_submissions')
+        .from('payments')
         .select(`
-          *,
-          driver:drivers(name, phone)
+          id,
+          payment_date,
+          amount,
+          description,
+          payer_name,
+          payment_type,
+          week,
+          payment_status,
+          created_at,
+          updated_at
         `);
 
-      if (status) query = query.eq('submission_status', status);
+      if (status) query = query.eq('payment_status', status);
 
       const { data, error } = await query
-        .order('submission_date', { ascending: false })
+        .order('payment_date', { ascending: false })
         .range(parseInt(offset), parseInt(offset) + parseInt(limit) - 1);
 
       if (error) throw error;
@@ -37,14 +45,11 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // GET /api/driver-submissions/:id - Get single submission
+    // GET /api/driver-submissions/:id - Get single payment
     if (httpMethod === 'GET' && id && !action) {
       const { data, error } = await supabase
-        .from('driver_submissions')
-        .select(`
-          *,
-          driver:drivers(name, phone)
-        `)
+        .from('payments')
+        .select('*')
         .eq('id', id)
         .single();
 
@@ -55,27 +60,27 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // POST /api/driver-submissions - Submit payment
+    // POST /api/driver-submissions - Submit new payment
     if (httpMethod === 'POST' && !id) {
-      const { driver_id, amount, week, month, notes } = JSON.parse(body);
+      const { payer_name, amount, payment_type, description, week, payment_date } = JSON.parse(body);
 
-      if (!driver_id || !amount) {
+      if (!payer_name || !amount) {
         return {
           statusCode: 400,
-          body: JSON.stringify({ error: 'Driver ID and amount required' })
+          body: JSON.stringify({ error: 'Payer name and amount required' })
         };
       }
 
       const { data, error } = await supabase
-        .from('driver_submissions')
+        .from('payments')
         .insert([{
-          driver_id,
+          payer_name,
           amount,
+          payment_type: payment_type || 'weekly_cash',
+          description,
           week,
-          month,
-          notes,
-          submission_date: new Date().toISOString().split('T')[0],
-          submission_status: 'Pending',
+          payment_date: payment_date || new Date().toISOString().split('T')[0],
+          payment_status: 'Paid',
           created_at: new Date().toISOString()
         }])
         .select();
@@ -87,18 +92,13 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // POST /api/driver-submissions/:id/approve - Approve submission
-    if (httpMethod === 'POST' && id && action === 'approve') {
-      const { staff_id, role } = JSON.parse(body);
+    // PUT /api/driver-submissions/:id - Update payment status
+    if (httpMethod === 'PUT' && id && !action) {
+      const updateData = JSON.parse(body);
 
       const { data, error } = await supabase
-        .from('driver_submissions')
-        .update({
-          submission_status: 'Approved',
-          approved_by_staff_id: staff_id,
-          approved_by_role: role,
-          approval_date: new Date().toISOString()
-        })
+        .from('payments')
+        .update(updateData)
         .eq('id', id)
         .select();
 
@@ -109,38 +109,17 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // POST /api/driver-submissions/:id/reject - Reject submission
-    if (httpMethod === 'POST' && id && action === 'reject') {
-      const { reason } = JSON.parse(body);
-
-      const { data, error } = await supabase
-        .from('driver_submissions')
-        .update({
-          submission_status: 'Rejected',
-          rejection_reason: reason,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', id)
-        .select();
-
-      if (error) throw error;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ data: data[0] })
-      };
-    }
-
-    // DELETE /api/driver-submissions/:id - Delete submission
+    // DELETE /api/driver-submissions/:id - Delete payment
     if (httpMethod === 'DELETE' && id) {
       const { error } = await supabase
-        .from('driver_submissions')
+        .from('payments')
         .delete()
         .eq('id', id);
 
       if (error) throw error;
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: 'Submission deleted' })
+        body: JSON.stringify({ message: 'Payment deleted' })
       };
     }
 
