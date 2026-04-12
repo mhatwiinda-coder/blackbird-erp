@@ -44,9 +44,7 @@ exports.handler = async (event, context) => {
         .from('rent_to_own_payments')
         .select(`
           *,
-          agreement:rent_to_own_agreements(total_amount, paid_amount, remaining_balance, agreement_status),
-          driver:drivers(name),
-          vehicle:vehicles(plate, make_model)
+          agreement:rent_to_own_agreements(total_amount, paid_amount, remaining_balance, agreement_status, driver:drivers(name), vehicle:vehicles(plate, make_model))
         `)
         .eq('approval_status', 'pending')
         .order('created_at', { ascending: false });
