@@ -8,7 +8,8 @@ const supabase = createClient(
 exports.handler = async (event, context) => {
   try {
     const { httpMethod, path, queryStringParameters, body } = event;
-    const pathSegments = path.replace('/.netlify/functions/rent-to-own', '').split('/').filter(Boolean);
+    const basePath = path.includes('/.netlify/functions/') ? '/.netlify/functions/rent-to-own' : '/api/rent-to-own';
+    const pathSegments = path.replace(basePath, '').split('/').filter(Boolean);
     const segment = pathSegments[0];
     const id = pathSegments[1];
 

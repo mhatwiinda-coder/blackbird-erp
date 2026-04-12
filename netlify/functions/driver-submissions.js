@@ -8,7 +8,7 @@ const supabase = createClient(
 exports.handler = async (event, context) => {
   try {
     const { httpMethod, path, queryStringParameters, body } = event;
-    const pathSegments = path.replace('/.netlify/functions/driver-submissions', '').split('/').filter(Boolean);
+    const basePath = path.includes('/.netlify/functions/') ? '/.netlify/functions/driver-submissions' : '/api/driver-submissions'; const pathSegments = path.replace(basePath, '').split('/').filter(Boolean);
     const id = pathSegments[0];
     const action = pathSegments[1];
 

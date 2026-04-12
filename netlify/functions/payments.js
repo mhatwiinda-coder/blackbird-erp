@@ -8,7 +8,7 @@ const supabase = createClient(
 exports.handler = async (event, context) => {
   try {
     const { httpMethod, path, queryStringParameters, body } = event;
-    const pathSegments = path.replace('/.netlify/functions/payments', '').split('/').filter(Boolean);
+    const basePath = path.includes('/.netlify/functions/') ? '/.netlify/functions/payments' : '/api/payments'; const pathSegments = path.replace(basePath, '').split('/').filter(Boolean);
     const id = pathSegments[0];
 
     // GET /api/payments - List all payments

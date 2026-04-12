@@ -8,7 +8,7 @@ const supabase = createClient(
 exports.handler = async (event, context) => {
   try {
     const { httpMethod, path, queryStringParameters, body } = event;
-    const pathSegments = path.replace('/.netlify/functions/logs', '').split('/').filter(Boolean);
+    const basePath = path.includes('/.netlify/functions/') ? '/.netlify/functions/logs' : '/api/logs'; const pathSegments = path.replace(basePath, '').split('/').filter(Boolean);
     const id = pathSegments[0];
 
     if (httpMethod === 'GET' && !id) {

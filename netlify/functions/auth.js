@@ -12,7 +12,7 @@ const SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 exports.handler = async (event, context) => {
   try {
     const { httpMethod, path, body } = event;
-    const pathSegments = path.replace('/.netlify/functions/auth', '').split('/').filter(Boolean);
+    const basePath = path.includes('/.netlify/functions/') ? '/.netlify/functions/auth' : '/api/auth'; const pathSegments = path.replace(basePath, '').split('/').filter(Boolean);
     const action = pathSegments[0];
 
     // POST /api/auth/login - Staff login
