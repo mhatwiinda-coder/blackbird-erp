@@ -3219,19 +3219,18 @@ async function renderRentToOwn() {
 }
 
 async function openRtoModal() {
-  // Fetch drivers and vehicles from SQLite directly (not Supabase)
-  // This ensures they match the foreign key constraints in rent_to_own_agreements table
+  // Fetch drivers and vehicles from Netlify Functions (production) or local API (development)
   try {
-    const baseUrl = `${window.location.protocol}//${window.location.hostname}:8000`;
+    const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
 
-    // Fetch from local SQLite API endpoints (not Supabase)
+    // Fetch from Netlify Functions or local API endpoints
     const driversResponse = await fetch(`${baseUrl}/api/rent-to-own/available-drivers`, {
       headers: {
         'Authorization': `Bearer ${authToken || 'test'}`
       }
     });
 
-    const vehiclesResponse = await fetch(`${baseUrl}/api/rent-to-own/available-vehicles`, {
+    const vehiclesResponse = await fetch(`${baseUrl}/api/rent-to-own/available-drivers`, {
       headers: {
         'Authorization': `Bearer ${authToken || 'test'}`
       }

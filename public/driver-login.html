@@ -515,8 +515,9 @@
         loginText.style.display = 'none';
         loginSpinner.style.display = 'inline-block';
 
-        // Call driver login API (uses current host)
-        const apiUrl = `${window.location.protocol}//${window.location.hostname}:8000/api/auth/driver-login`;
+        // Call driver login API (uses Netlify Functions in production, localhost:8000 in development)
+        const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+        const apiUrl = `${baseUrl}/api/auth/driver-login`;
         fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
