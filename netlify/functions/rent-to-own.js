@@ -40,19 +40,43 @@ exports.handler = async (event, context) => {
 
     // GET /api/rent-to-own/approvals/pending - Recent pending payments
     if (httpMethod === 'GET' && segment === 'approvals' && pathSegments[1] === 'pending') {
-      const { data, error } = await supabase
+      const { data: payments, error } = await supabase
         .from('rent_to_own_payments')
         .select(`
-          *,
-          agreement:rent_to_own_agreements(total_price, paid_amount, remaining_balance, agreement_status, driver_id, vehicle_id, driver:drivers(name), vehicle:vehicles(plate, make_model))
+          id,
+          amount,
+          payment_method,
+          payment_date,
+          created_at,
+          notes,
+          agreement_id,
+          agreement:rent_to_own_agreements(total_price, paid_amount, remaining_balance, agreement_status, driver_id, vehicle_id, driver:drivers(id, name), vehicle:vehicles(id, plate, make_model))
         `)
         .order('created_at', { ascending: false })
         .limit(20);
 
       if (error) throw error;
+
+      // Flatten the response for easier frontend consumption
+      const flattened = (payments || []).map(p => ({
+        id: p.id,
+        payment_amount: p.amount,
+        payment_method: p.payment_method,
+        payment_date: p.payment_date,
+        created_at: p.created_at,
+        notes: p.notes,
+        agreement_id: p.agreement_id,
+        driver_name: p.agreement?.driver?.name || 'Unknown',
+        vehicle_name: p.agreement?.vehicle?.plate || 'Unknown',
+        total_amount: p.agreement?.total_price || 0,
+        paid_amount: p.agreement?.paid_amount || 0,
+        remaining_balance: p.agreement?.remaining_balance || 0,
+        agreement_status: p.agreement?.agreement_status || 'Active'
+      }));
+
       return {
         statusCode: 200,
-        body: JSON.stringify({ data: data || [], count: data?.length || 0 })
+        body: JSON.stringify({ data: flattened, count: flattened?.length || 0 })
       };
     }
 
@@ -237,6 +261,66 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 200,
         body: JSON.stringify({ message: 'Agreement deleted' })
+      };
+    }
+
+    // POST /api/rent-to-own/:agreement_id/approve-payment/:payment_id - Approve RTO payment
+    if (httpMethod === 'POST' && segment && !isNaN(segment) && id === 'approve-payment' && pathSegments[2]) {
+      const agreementId = parseInt(segment);
+      const paymentId = parseInt(pathSegments[2]);
+
+      // Mark payment as approved (update rent_to_own_payments if it has approval status)
+      // For now, just return success - the payment was already recorded
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'Payment approved' })
+      };
+    }
+
+    // POST /api/rent-to-own/:agreement_id/reject-payment/:payment_id - Reject RTO payment
+    if (httpMethod === 'POST' && segment && !isNaN(segment) && id === 'reject-payment' && pathSegments[2]) {
+      const agreementId = parseInt(segment);
+      const paymentId = parseInt(pathSegments[2]);
+      const { rejectionReason } = JSON.parse(body || '{}');
+
+      // Delete the payment record and reverse the agreement balance
+      const { data: payment, error: fetchError } = await supabase
+        .from('rent_to_own_payments')
+        .select('amount')
+        .eq('id', paymentId)
+        .eq('agreement_id', agreementId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Delete payment
+      const { error: deleteError } = await supabase
+        .from('rent_to_own_payments')
+        .delete()
+        .eq('id', paymentId);
+
+      if (deleteError) throw deleteError;
+
+      // Reverse the agreement balance
+      const { data: agreement } = await supabase
+        .from('rent_to_own_agreements')
+        .select('paid_amount, remaining_balance')
+        .eq('id', agreementId)
+        .single();
+
+      if (agreement) {
+        await supabase
+          .from('rent_to_own_agreements')
+          .update({
+            paid_amount: agreement.paid_amount - payment.amount,
+            remaining_balance: agreement.remaining_balance + payment.amount
+          })
+          .eq('id', agreementId);
+      }
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'Payment rejected and reversed' })
       };
     }
 

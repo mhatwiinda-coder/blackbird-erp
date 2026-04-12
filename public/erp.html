@@ -2839,7 +2839,8 @@ function filterPaymentsTable() {
       <td>${fmtK(p.amount)}</td>
       <td>Week ${p.week || '—'}</td>
       <td>${badgeStatus(p.payment_status)}</td>
-    </tr>`).join('') || '<tr><td colspan="7" style="color:var(--text2);text-align:center">No payment records match filters</td></tr>';
+      <td><button class="btn btn-danger btn-sm" onclick="deletePayment(${p.id})" title="Delete"><i class="fas fa-trash"></i></button></td>
+    </tr>`).join('') || '<tr><td colspan="8" style="color:var(--text2);text-align:center">No payment records match filters</td></tr>';
 }
 
 // Helper functions for payment form
@@ -3017,6 +3018,18 @@ function exportPaymentsExcel() {
       'Description': p.description || ''
     })), 'Blackbird_Payments');
   });
+}
+
+async function deletePayment(paymentId) {
+  if (!confirm('Delete this payment record? This cannot be undone.')) return;
+  try {
+    await apiCall(`/admin-cleanup/delete-payment/${paymentId}`, 'POST');
+    showNotification('Payment deleted', 'success', 2000);
+    await renderPayments();
+  } catch (error) {
+    alert('Failed to delete payment: ' + error.message);
+    console.error('Error:', error);
+  }
 }
 
 // =========== INVOICES ===========
@@ -3496,10 +3509,12 @@ async function renderRtoSubmissions() {
         <td>${badgeStatus(s.submission_status)}</td>
         <td>
           ${s.submission_status === 'Pending' ? `
-            <button class="btn btn-sm btn-success" onclick="approveDriverSubmission(${s.id})"><i class="fas fa-check"></i> Approve</button>
-            <button class="btn btn-sm btn-danger" onclick="rejectDriverSubmission(${s.id})"><i class="fas fa-times"></i> Reject</button>
+            <button class="btn btn-sm btn-success" onclick="approveDriverSubmission(${s.id})"><i class="fas fa-check"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="rejectDriverSubmission(${s.id})"><i class="fas fa-times"></i></button>
+            <button class="btn btn-sm btn-outline" onclick="deleteSubmission(${s.id})" title="Delete"><i class="fas fa-trash"></i></button>
           ` : `
             <span style="color:var(--text2);font-size:12px;">${s.submission_status === 'Approved' ? '✓ Approved' : '✗ Rejected'}</span>
+            <button class="btn btn-sm btn-outline" onclick="deleteSubmission(${s.id})" title="Delete"><i class="fas fa-trash"></i></button>
           `}
         </td>
       </tr>
@@ -4930,7 +4945,7 @@ async function approveDriverSubmission(submissionId) {
 
     // Reload submissions list
     await renderRtoSubmissions();
-    alert('✓ Submission approved successfully!');
+    showNotification('Weekly submission approved successfully!', 'success', 3000);
   } catch (err) {
     alert('Error approving submission: ' + err.message);
   }
@@ -4965,9 +4980,21 @@ async function rejectDriverSubmission(submissionId) {
     }
 
     await renderRtoSubmissions();
-    alert('✓ Submission rejected');
+    showNotification('Submission rejected', 'info', 2000);
   } catch (err) {
     alert('Error rejecting submission: ' + err.message);
+  }
+}
+
+async function deleteSubmission(submissionId) {
+  if (!confirm('Delete this submission? This cannot be undone.')) return;
+  try {
+    await apiCall(`/admin-cleanup/delete-submission/${submissionId}`, 'POST');
+    showNotification('Submission deleted', 'success', 2000);
+    await renderRtoSubmissions();
+  } catch (error) {
+    alert('Failed to delete submission: ' + error.message);
+    console.error('Error:', error);
   }
 }
 
