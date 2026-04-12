@@ -4275,33 +4275,24 @@ async function deleteMechanic(id) {
 let chartA1, chartA2;
 async function renderAnalytics() {
   try {
-    // Fetch all necessary data from API
-    const statsResult = await apiCall('/dashboard/stats');
-    const monthlyResult = await apiCall('/dashboard/monthly-revenue');
-    const logsResult = await apiCall('/logs');
-    const driversResult = await apiCall('/drivers');
+    // Fetch analytics data from new endpoints
+    const summaryResult = await apiCall('/analytics/summary');
+    const revenueResult = await apiCall('/analytics/revenue-breakdown');
+    const performanceResult = await apiCall('/analytics/driver-performance');
+    const fleetResult = await apiCall('/analytics/fleet-utilisation');
 
-    const stats = statsResult.data || {};
-    const monthlyData = monthlyResult.data || [];
-    const logs = logsResult.data || [];
-    const drivers = driversResult.data || [];
+    const summary = summaryResult.data || {};
+    const revenue = revenueResult.data || {};
+    const performance = performanceResult.data || [];
+    const fleet = fleetResult.data || [];
 
-    // Calculate YTD totals
-    const ytd = logs.reduce((s,l)=>s+(parseFloat(l.weekly_cashing)||0),0);
-    const ytdDist = logs.reduce((s,l)=>s+((parseFloat(l.end_mileage)||0)-(parseFloat(l.start_mileage)||0)),0);
-    const avgC = logs.length ? (ytd/logs.length) : 0;
+    // Display YTD metrics
+    document.getElementById('ytd-revenue').textContent = fmtK(summary.ytd_revenue || 0);
+    document.getElementById('ytd-distance').textContent = (summary.ytd_distance || 0).toLocaleString() + ' km';
+    document.getElementById('avg-cashing').textContent = fmtK(Math.round(summary.avg_weekly_cashing || 0));
 
-    document.getElementById('ytd-revenue').textContent = fmtK(ytd);
-    document.getElementById('ytd-distance').textContent = ytdDist.toLocaleString() + ' km';
-    document.getElementById('avg-cashing').textContent = fmtK(Math.round(avgC));
-
-    // Monthly Revenue Chart - populate from API data
-    const revenueByMonth = Array(12).fill(0);
-    monthlyData.forEach(m => {
-      if(m.month !== null && m.month !== undefined) {
-        revenueByMonth[m.month] = m.revenue || 0;
-      }
-    });
+    // Monthly Revenue Chart
+    const revenueByMonth = revenue.months ? revenue.months.map((m, i) => revenue.cars[i] + revenue.bikes[i]) : Array(12).fill(0);
 
     if(chartA1) chartA1.destroy();
     chartA1 = new Chart(document.getElementById('chartAnalytics1'), {
@@ -4311,60 +4302,34 @@ async function renderAnalytics() {
     });
 
     // Cars vs Bikes Revenue
-    const carRev = logs.filter(l=>l.vehicle_type==='CAR').reduce((s,l)=>s+(parseFloat(l.weekly_cashing)||0),0);
-    const bikeRev = logs.filter(l=>l.vehicle_type==='BIKE').reduce((s,l)=>s+(parseFloat(l.weekly_cashing)||0),0);
+    const carTotal = revenue.cars ? revenue.cars.reduce((s,v)=>s+v, 0) : 0;
+    const bikeTotal = revenue.bikes ? revenue.bikes.reduce((s,v)=>s+v, 0) : 0;
 
     if(chartA2) chartA2.destroy();
     chartA2 = new Chart(document.getElementById('chartAnalytics2'), {
       type: 'doughnut',
-      data: { labels: ['Cars (Transport)', 'Bikes (Yango)'], datasets: [{ data: [carRev, bikeRev], backgroundColor: ['#3090e8','#e8a020'], borderWidth: 0 }] },
+      data: { labels: ['Cars (Transport)', 'Bikes (Yango)'], datasets: [{ data: [carTotal, bikeTotal], backgroundColor: ['#3090e8','#e8a020'], borderWidth: 0 }] },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#9aa0b8' } } } }
     });
 
     // Driver Performance Table
-    const driverMap = {};
-    drivers.forEach(d => {
-      driverMap[d.name] = { plate: d.plate, type: d.type, months: Array(12).fill(0) };
-    });
-
-    logs.forEach(l => {
-      const driverName = l.driver_name || (drivers.find(d=>d.id===l.driver_id)?.name);
-      if(driverName) {
-        if(!driverMap[driverName]) {
-          driverMap[driverName] = { plate: l.vehicle_plate || '—', type: l.vehicle_type || 'N/A', months: Array(12).fill(0) };
-        }
-        if(l.month !== null && l.month !== undefined) {
-          driverMap[driverName].months[l.month] = (driverMap[driverName].months[l.month]||0) + (parseFloat(l.weekly_cashing)||0);
-        }
-      }
-    });
-
-    document.getElementById('perf-tbody').innerHTML = Object.entries(driverMap).map(([name, d])=>{
-      const total = d.months.reduce((s,v)=>s+v,0);
-      return `<tr><td><strong>${name}</strong></td><td>${d.plate||'—'}</td>
-        <td><span class="badge ${d.type==='CAR'?'badge-car':'badge-bike'}">${d.type}</span></td>
-        ${d.months.map(v=>`<td>${v?fmtK(v):'—'}</td>`).join('')}
-        <td><strong>${fmtK(total)}</strong></td></tr>`;
+    document.getElementById('perf-tbody').innerHTML = (performance || []).map(d=>{
+      const monthKeys = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+      return `<tr><td><strong>${d.driver}</strong></td><td>${d.plate||'—'}</td>
+        <td><span class="badge badge-car">${d.type||'CAR'}</span></td>
+        ${monthKeys.map(m=>`<td>${d[m]?fmtK(d[m]):'—'}</td>`).join('')}
+        <td><strong>${fmtK(d.total || 0)}</strong></td></tr>`;
     }).join('') || '<tr><td colspan="16" style="color:var(--text2);text-align:center">No data</td></tr>';
 
     // Fleet Utilization
     const util = document.getElementById('fleet-util-list');
-    const driverTotals = {};
-    logs.forEach(l => {
-      const driverName = l.driver_name || (drivers.find(d=>d.id===l.driver_id)?.name);
-      if(driverName) {
-        driverTotals[driverName] = (driverTotals[driverName]||0) + (parseFloat(l.weekly_cashing)||0);
-      }
-    });
-
-    const maxRev = Math.max(...Object.values(driverTotals), 1);
-    const fleetItems = drivers.map(d => {
-      const total = driverTotals[d.name] || 0;
-      const pct = Math.round((total/maxRev)*100);
+    const maxRev = fleet.length ? Math.max(...fleet.map(f => f.revenue || 0), 1) : 1;
+    const fleetItems = (fleet || []).map(f => {
+      const pct = maxRev > 0 ? Math.round(((f.revenue || 0) / maxRev) * 100) : 0;
       return `<div style="margin-bottom:16px">
         <div class="flex-between" style="margin-bottom:6px">
-          <span style="font-size:13px">${d.name} <span style="color:var(--text2)">${d.plate||'—'}</span></span>
-          <span style="font-size:13px;font-weight:600">${fmtK(total)}</span>
+          <span style="font-size:13px">${f.driver} <span style="color:var(--text2)">${f.plate||'—'}</span></span>
+          <span style="font-size:13px;font-weight:600">${fmtK(f.revenue || 0)}</span>
         </div>
         <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
       </div>`;
