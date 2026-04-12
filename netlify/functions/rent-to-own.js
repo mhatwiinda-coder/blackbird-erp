@@ -44,7 +44,7 @@ exports.handler = async (event, context) => {
         .from('rent_to_own_payments')
         .select(`
           *,
-          agreement:rent_to_own_agreements(total_amount, paid_amount, remaining_balance, agreement_status, driver:drivers(name), vehicle:vehicles(plate, make_model))
+          agreement:rent_to_own_agreements(total_price, paid_amount, remaining_balance, agreement_status, driver:drivers(name), vehicle:vehicles(plate, make_model))
         `)
         .eq('approval_status', 'pending')
         .order('created_at', { ascending: false });
@@ -87,16 +87,16 @@ exports.handler = async (event, context) => {
 
     // POST /api/rent-to-own - Create agreement
     if (httpMethod === 'POST' && !segment) {
-      const { driver_id, vehicle_id, total_amount, down_payment } = JSON.parse(body);
+      const { driver_id, vehicle_id, total_price, down_payment } = JSON.parse(body);
 
-      if (!driver_id || !vehicle_id || !total_amount) {
+      if (!driver_id || !vehicle_id || !total_price) {
         return {
           statusCode: 400,
           body: JSON.stringify({ error: 'Missing required fields' })
         };
       }
 
-      const remaining_balance = total_amount - (down_payment || 0);
+      const remaining_balance = total_price - (down_payment || 0);
       const paid_amount = down_payment || 0;
 
       const { data, error } = await supabase
@@ -104,7 +104,7 @@ exports.handler = async (event, context) => {
         .insert([{
           driver_id,
           vehicle_id,
-          total_amount,
+          total_price,
           paid_amount,
           remaining_balance,
           agreement_status: 'Active',
