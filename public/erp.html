@@ -2864,7 +2864,7 @@ function filterPaymentsTable() {
 
   document.getElementById('pay-filter-count').textContent = filtered.length;
   document.getElementById('payments-tbody').innerHTML = filtered.map(p => `
-    <tr>
+    <tr data-payment-id="${p.id}">
       <td>${p.payment_date || '—'}</td>
       <td>${p.payer_name || '—'}</td>
       <td>${p.payment_type || '—'}</td>
@@ -2902,14 +2902,20 @@ async function loadRentToOwnAgreements() {
   try {
     const result = await apiCall('/rent-to-own?status=Active');
     const agreements = result.data || [];
-    const select = document.getElementById('p-rto-agreement');
-    select.innerHTML = '<option value="">Select Agreement...</option>' +
+    const optionsHtml = '<option value="">Select Agreement...</option>' +
       agreements.map(a => {
         const driverName = a.driver?.name || `Driver ${a.driver_id}`;
         const vehiclePlate = a.vehicle?.plate || 'Unknown';
         const balance = a.remaining_balance ? a.remaining_balance.toFixed(2) : '0.00';
         return `<option value="${a.id}">${driverName} - ${vehiclePlate} - K${balance} remaining</option>`;
       }).join('');
+
+    // Populate BOTH regular and backdated payment dropdowns
+    const pSelect = document.getElementById('p-rto-agreement');
+    if (pSelect) pSelect.innerHTML = optionsHtml;
+
+    const bdSelect = document.getElementById('bd-rto-agreement');
+    if (bdSelect) bdSelect.innerHTML = optionsHtml;
   } catch (error) {
     console.error('Error loading rent-to-own agreements:', error);
   }
@@ -3094,10 +3100,15 @@ async function deletePayment(paymentId) {
   try {
     const response = await apiCall(`/admin-cleanup/delete-payment/${paymentId}`, 'POST');
     console.log('Delete response:', response);
-    showNotification('Payment deleted', 'success', 2000);
-    // Force a full page reload to ensure data is refreshed
-    await new Promise(resolve => setTimeout(resolve, 500));
-    location.reload();
+
+    // Remove from UI immediately
+    const row = document.querySelector(`tr[data-payment-id="${paymentId}"]`);
+    if (row) row.remove();
+
+    showNotification('Payment deleted successfully!', 'success', 2000);
+
+    // Refresh the payments data without logging out
+    await renderPayments();
   } catch (error) {
     alert('Failed to delete payment: ' + error.message);
     console.error('Error:', error);
