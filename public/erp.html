@@ -836,10 +836,19 @@ tr:last-child td { border-bottom: none; }
                 </select>
               </div>
               <div style="flex: 1; min-width: 200px;">
+                <label style="display:block; font-size:12px; color:var(--text2); margin-bottom:5px;">Start Date</label>
+                <input type="date" id="pay-filter-start-date" class="form-control" onchange="filterPaymentsTable()" style="width: 100%;">
+              </div>
+              <div style="flex: 1; min-width: 200px;">
+                <label style="display:block; font-size:12px; color:var(--text2); margin-bottom:5px;">End Date</label>
+                <input type="date" id="pay-filter-end-date" class="form-control" onchange="filterPaymentsTable()" style="width: 100%;">
+              </div>
+              <div style="flex: 1; min-width: 200px;">
                 <label style="display:block; font-size:12px; color:var(--text2); margin-bottom:5px;">Search</label>
                 <input type="text" id="pay-filter-search" class="form-control" placeholder="Driver/Client name..." onkeyup="filterPaymentsTable()" style="width: 100%;">
               </div>
               <button class="btn btn-primary btn-sm" onclick="openModal('modal-payment')"><i class="fas fa-plus"></i> Record</button>
+              <button class="btn btn-outline btn-sm" onclick="resetPaymentFilters()"><i class="fas fa-undo"></i> Reset</button>
               <button class="btn btn-outline btn-sm" onclick="exportPaymentsExcel()"><i class="fas fa-file-excel"></i> Export</button>
             </div>
             <div style="margin-bottom: 10px; font-size: 13px; color: var(--text2);">
@@ -869,6 +878,15 @@ tr:last-child td { border-bottom: none; }
                 <label style="display:block; font-size:12px; color:var(--text2); margin-bottom:5px;">Filter by Driver</label>
                 <input type="text" id="sub-filter-driver" class="form-control" placeholder="Driver ID or name..." onkeyup="filterSubmissionsTable()" style="width: 100%;">
               </div>
+              <div style="flex: 1; min-width: 200px;">
+                <label style="display:block; font-size:12px; color:var(--text2); margin-bottom:5px;">Start Date</label>
+                <input type="date" id="sub-filter-start-date" class="form-control" onchange="filterSubmissionsTable()" style="width: 100%;">
+              </div>
+              <div style="flex: 1; min-width: 200px;">
+                <label style="display:block; font-size:12px; color:var(--text2); margin-bottom:5px;">End Date</label>
+                <input type="date" id="sub-filter-end-date" class="form-control" onchange="filterSubmissionsTable()" style="width: 100%;">
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="resetSubmissionFilters()"><i class="fas fa-undo"></i> Reset</button>
               <button class="btn btn-outline btn-sm" onclick="loadDriverSubmissions()"><i class="fas fa-sync"></i> Refresh</button>
             </div>
             <div style="margin-bottom: 10px; font-size: 13px; color: var(--text2);">
@@ -1812,6 +1830,47 @@ async function sbFetch(path, opts = {}) {
 async function sbRpc(fn, params = {}) {
   return sbFetch('/rest/v1/rpc/' + fn, { method: 'POST', body: JSON.stringify(params) });
 }
+
+// Automated Cache Clearing on Deployment
+async function checkAndClearCache() {
+  try {
+    const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+    const response = await fetch(baseUrl + '/api/version');
+    if (!response.ok) throw new Error('Version check failed');
+
+    const { version } = await response.json();
+    const storedVersion = localStorage.getItem('appVersion');
+
+    if (storedVersion && storedVersion !== version) {
+      // Version mismatch - clear all cache
+      console.log('Clearing cache: new version detected');
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Clear IndexedDB if used
+      if (window.indexedDB) {
+        try {
+          const databases = await window.indexedDB.databases?.() || [];
+          databases.forEach(db => window.indexedDB.deleteDatabase(db.name));
+        } catch (e) {
+          console.log('IndexedDB clear skipped:', e.message);
+        }
+      }
+
+      // Store new version and reload once
+      localStorage.setItem('appVersion', version);
+      location.reload();
+    } else if (!storedVersion) {
+      localStorage.setItem('appVersion', version);
+    }
+  } catch (error) {
+    console.log('Cache check failed, continuing...', error.message);
+    // Continue even if version check fails
+  }
+}
+
+// Check cache on page load
+checkAndClearCache();
 
 let authToken = localStorage.getItem('erpSessionToken');
 
@@ -2844,6 +2903,8 @@ function filterPaymentsTable() {
   const statusFilter = document.getElementById('pay-filter-status')?.value || '';
   const typeFilter = document.getElementById('pay-filter-type')?.value || '';
   const searchFilter = (document.getElementById('pay-filter-search')?.value || '').toLowerCase();
+  const startDate = document.getElementById('pay-filter-start-date')?.value || '';
+  const endDate = document.getElementById('pay-filter-end-date')?.value || '';
 
   let filtered = allPaymentsData;
 
@@ -2862,6 +2923,17 @@ function filterPaymentsTable() {
     );
   }
 
+  if (startDate) {
+    filtered = filtered.filter(p => (p.payment_date || '') >= startDate);
+  }
+
+  if (endDate) {
+    filtered = filtered.filter(p => (p.payment_date || '') <= endDate);
+  }
+
+  // Sort by date descending (most recent first)
+  filtered.sort((a, b) => new Date(b.payment_date || 0) - new Date(a.payment_date || 0));
+
   document.getElementById('pay-filter-count').textContent = filtered.length;
   document.getElementById('payments-tbody').innerHTML = filtered.map(p => `
     <tr data-payment-id="${p.id}">
@@ -2874,6 +2946,15 @@ function filterPaymentsTable() {
       <td>${badgeStatus(p.payment_status)}</td>
       <td><button class="btn btn-danger btn-sm" onclick="deletePayment(${p.id})" title="Delete"><i class="fas fa-trash"></i></button></td>
     </tr>`).join('') || '<tr><td colspan="8" style="color:var(--text2);text-align:center">No payment records match filters</td></tr>';
+}
+
+function resetPaymentFilters() {
+  document.getElementById('pay-filter-status').value = '';
+  document.getElementById('pay-filter-type').value = '';
+  document.getElementById('pay-filter-search').value = '';
+  document.getElementById('pay-filter-start-date').value = '';
+  document.getElementById('pay-filter-end-date').value = '';
+  filterPaymentsTable();
 }
 
 // Helper functions for payment form
@@ -4932,6 +5013,8 @@ async function loadDriverSubmissions() {
 function filterSubmissionsTable() {
   const statusFilter = (document.getElementById('sub-filter-status')?.value || '').toLowerCase();
   const driverFilter = (document.getElementById('sub-filter-driver')?.value || '').toLowerCase();
+  const startDate = document.getElementById('sub-filter-start-date')?.value || '';
+  const endDate = document.getElementById('sub-filter-end-date')?.value || '';
 
   let filtered = allSubmissionsData;
 
@@ -4945,6 +5028,17 @@ function filterSubmissionsTable() {
       (s.driver_name && s.driver_name.toLowerCase().includes(driverFilter))
     );
   }
+
+  if (startDate) {
+    filtered = filtered.filter(s => (s.submission_date || '') >= startDate);
+  }
+
+  if (endDate) {
+    filtered = filtered.filter(s => (s.submission_date || '') <= endDate);
+  }
+
+  // Sort by date descending (most recent first)
+  filtered.sort((a, b) => new Date(b.submission_date || 0) - new Date(a.submission_date || 0));
 
   document.getElementById('sub-filter-count').textContent = filtered.length;
   const tbody = document.getElementById('submissions-approval-tbody');
@@ -4966,6 +5060,14 @@ function filterSubmissionsTable() {
   `).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--text2)">No submissions match filters</td></tr>';
 }
 
+function resetSubmissionFilters() {
+  document.getElementById('sub-filter-status').value = '';
+  document.getElementById('sub-filter-driver').value = '';
+  document.getElementById('sub-filter-start-date').value = '';
+  document.getElementById('sub-filter-end-date').value = '';
+  filterSubmissionsTable();
+}
+
 async function approveDriverSubmission(submissionId) {
   if (!currentUser || !['secretary', 'hr', 'ceo'].includes(currentUser)) {
     alert('Only Secretary or HR can approve submissions');
@@ -4973,7 +5075,9 @@ async function approveDriverSubmission(submissionId) {
   }
 
   try {
-    // Call local API to approve submission
+    // Determine approved_by_role based on current user
+    const approvedByRole = currentUser === 'ceo' ? 'hr' : currentUser; // Default to hr for ceo
+
     const headers = {
       'Content-Type': 'application/json'
     };
@@ -4983,7 +5087,7 @@ async function approveDriverSubmission(submissionId) {
     const response = await fetch(`/api/driver-submissions/${submissionId}/approve`, {
       method: 'POST',
       headers: headers,
-      body: JSON.stringify({})
+      body: JSON.stringify({ approvedByRole })
     });
 
     if (!response.ok) {
@@ -4991,9 +5095,10 @@ async function approveDriverSubmission(submissionId) {
       throw new Error(error.error || 'Failed to approve');
     }
 
-    // Reload submissions list
-    await renderRtoSubmissions();
-    showNotification('Weekly submission approved successfully!', 'success', 3000);
+    // Reload submissions list and update RTO submissions badge
+    await loadDriverSubmissions();
+    await updateRtoSubmissionsBadgeAuto();
+    showNotification('Submission approved successfully! Payment recorded.', 'success', 3000);
   } catch (err) {
     alert('Error approving submission: ' + err.message);
   }
@@ -5009,7 +5114,9 @@ async function rejectDriverSubmission(submissionId) {
   if (!reason) return;
 
   try {
-    // Call local API to reject submission
+    // Determine approved_by_role based on current user
+    const approvedByRole = currentUser === 'ceo' ? 'hr' : currentUser; // Default to hr for ceo
+
     const headers = {
       'Content-Type': 'application/json'
     };
@@ -5019,7 +5126,7 @@ async function rejectDriverSubmission(submissionId) {
     const response = await fetch(`/api/driver-submissions/${submissionId}/reject`, {
       method: 'POST',
       headers: headers,
-      body: JSON.stringify({ rejectionReason: reason })
+      body: JSON.stringify({ rejectionReason: reason, approvedByRole })
     });
 
     if (!response.ok) {
@@ -5027,8 +5134,9 @@ async function rejectDriverSubmission(submissionId) {
       throw new Error(error.error || 'Failed to reject');
     }
 
-    await renderRtoSubmissions();
-    showNotification('Submission rejected', 'info', 2000);
+    await loadDriverSubmissions();
+    await updateRtoSubmissionsBadgeAuto();
+    showNotification('Submission rejected and driver notified', 'info', 2000);
   } catch (err) {
     alert('Error rejecting submission: ' + err.message);
   }

@@ -204,6 +204,8 @@ CREATE TABLE IF NOT EXISTS driver_submissions (
   week INTEGER,
   month INTEGER,
   notes TEXT,
+  submission_type TEXT DEFAULT 'weekly',  -- 'weekly' or 'rto' (rent-to-own)
+  agreement_id BIGINT REFERENCES rent_to_own_agreements(id) ON DELETE SET NULL,  -- For RTO submissions
   submission_status TEXT DEFAULT 'Pending',
   approved_by_staff_id BIGINT REFERENCES staff(id) ON DELETE SET NULL,
   approved_by_role TEXT,
