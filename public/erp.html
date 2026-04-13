@@ -5076,7 +5076,7 @@ async function approveDriverSubmission(submissionId) {
 
   try {
     // Determine approved_by_role based on current user
-    const approvedByRole = currentUser === 'ceo' ? 'hr' : currentUser; // Default to hr for ceo
+    const approvedByRole = currentUser === 'ceo' ? 'hr' : currentUser;
 
     const headers = {
       'Content-Type': 'application/json'
@@ -5084,22 +5084,33 @@ async function approveDriverSubmission(submissionId) {
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
     }
+
+    console.log('Calling approve API for submission:', submissionId);
     const response = await fetch(`/api/driver-submissions/${submissionId}/approve`, {
       method: 'POST',
       headers: headers,
       body: JSON.stringify({ approvedByRole })
     });
 
+    console.log('Approve response status:', response.status);
+
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Failed to approve');
+      throw new Error(error.error || `Failed to approve: ${response.status}`);
     }
 
-    // Reload submissions list and update RTO submissions badge
-    await loadDriverSubmissions();
-    await updateRtoSubmissionsBadgeAuto();
+    const result = await response.json();
+    console.log('Approve success:', result);
+
     showNotification('Submission approved successfully! Payment recorded.', 'success', 3000);
+
+    // Refresh submissions after a short delay
+    setTimeout(() => {
+      filterSubmissionsTable();
+    }, 500);
+
   } catch (err) {
+    console.error('Approval error:', err);
     alert('Error approving submission: ' + err.message);
   }
 }
@@ -5115,7 +5126,7 @@ async function rejectDriverSubmission(submissionId) {
 
   try {
     // Determine approved_by_role based on current user
-    const approvedByRole = currentUser === 'ceo' ? 'hr' : currentUser; // Default to hr for ceo
+    const approvedByRole = currentUser === 'ceo' ? 'hr' : currentUser;
 
     const headers = {
       'Content-Type': 'application/json'
@@ -5123,21 +5134,33 @@ async function rejectDriverSubmission(submissionId) {
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
     }
+
+    console.log('Calling reject API for submission:', submissionId);
     const response = await fetch(`/api/driver-submissions/${submissionId}/reject`, {
       method: 'POST',
       headers: headers,
       body: JSON.stringify({ rejectionReason: reason, approvedByRole })
     });
 
+    console.log('Reject response status:', response.status);
+
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Failed to reject');
+      throw new Error(error.error || `Failed to reject: ${response.status}`);
     }
 
-    await loadDriverSubmissions();
-    await updateRtoSubmissionsBadgeAuto();
+    const result = await response.json();
+    console.log('Reject success:', result);
+
     showNotification('Submission rejected and driver notified', 'info', 2000);
+
+    // Refresh submissions after a short delay
+    setTimeout(() => {
+      filterSubmissionsTable();
+    }, 500);
+
   } catch (err) {
+    console.error('Rejection error:', err);
     alert('Error rejecting submission: ' + err.message);
   }
 }
