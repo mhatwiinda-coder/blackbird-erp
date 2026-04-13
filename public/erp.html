@@ -1451,7 +1451,16 @@ tr:last-child td { border-bottom: none; }
 
         <div class="form-group" id="p-rto-agreement-group" style="display:none;">
           <label>Rent-to-Own Agreement</label>
-          <select id="p-rto-agreement"><option value="">Select Agreement...</option></select>
+          <select id="p-rto-agreement" onchange="loadRtoAgreementDetails()"><option value="">Select Agreement...</option></select>
+        </div>
+
+        <div id="p-rto-details-group" style="display:none; grid-column:1/-1; background:var(--surface); padding:15px; border-radius:6px; margin-bottom:15px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+            <div><label style="font-size:12px; color:var(--text2);">Vehicle</label><div id="p-rto-vehicle" style="font-weight:bold;">—</div></div>
+            <div><label style="font-size:12px; color:var(--text2);">Total Amount</label><div id="p-rto-total" style="font-weight:bold;">K0</div></div>
+            <div><label style="font-size:12px; color:var(--text2);">Already Paid</label><div id="p-rto-paid" style="font-weight:bold; color:#30c060;">K0</div></div>
+            <div><label style="font-size:12px; color:var(--text2);">Remaining Balance</label><div id="p-rto-balance" style="font-weight:bold; color:#f08080;">K0</div></div>
+          </div>
         </div>
 
         <div class="form-group"><label>Payment Date</label><input type="date" id="p-payment-date"/></div>
@@ -2895,9 +2904,45 @@ async function loadRentToOwnAgreements() {
     const agreements = result.data || [];
     const select = document.getElementById('p-rto-agreement');
     select.innerHTML = '<option value="">Select Agreement...</option>' +
-      agreements.map(a => `<option value="${a.id}">Agreement #${a.id} - Driver ${a.driver_id} (K${a.remaining_balance.toFixed(2)} remaining)</option>`).join('');
+      agreements.map(a => {
+        const driverName = a.driver?.name || `Driver ${a.driver_id}`;
+        const vehiclePlate = a.vehicle?.plate || 'Unknown';
+        const balance = a.remaining_balance ? a.remaining_balance.toFixed(2) : '0.00';
+        return `<option value="${a.id}">${driverName} - ${vehiclePlate} - K${balance} remaining</option>`;
+      }).join('');
   } catch (error) {
     console.error('Error loading rent-to-own agreements:', error);
+  }
+}
+
+async function loadRtoAgreementDetails() {
+  try {
+    const agreementId = document.getElementById('p-rto-agreement').value;
+    if (!agreementId) {
+      document.getElementById('p-rto-details-group').style.display = 'none';
+      return;
+    }
+
+    const result = await apiCall(`/rent-to-own/${agreementId}`);
+    const a = result;
+
+    if (!a) {
+      console.error('Agreement not found');
+      return;
+    }
+
+    // Display agreement details
+    document.getElementById('p-rto-vehicle').textContent = a.vehicle?.plate || 'Unknown';
+    document.getElementById('p-rto-total').textContent = `K${(a.total_price || 0).toFixed(2)}`;
+    document.getElementById('p-rto-paid').textContent = `K${(a.paid_amount || 0).toFixed(2)}`;
+    document.getElementById('p-rto-balance').textContent = `K${(a.remaining_balance || 0).toFixed(2)}`;
+    document.getElementById('p-rto-details-group').style.display = 'grid';
+
+    // Auto-fill the amount with remaining balance
+    document.getElementById('p-amount').value = (a.remaining_balance || 0).toFixed(2);
+  } catch (error) {
+    console.error('Error loading RTO agreement details:', error);
+    document.getElementById('p-rto-details-group').style.display = 'none';
   }
 }
 
