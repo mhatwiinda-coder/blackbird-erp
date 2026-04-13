@@ -130,20 +130,28 @@ exports.handler = async (event, context) => {
         };
       }
 
+      const insertData = {
+        driver_id,
+        amount,
+        week,
+        month,
+        notes,
+        submission_date: submission_date || new Date().toISOString().split('T')[0],
+        submission_status: 'Pending',
+        created_at: new Date().toISOString()
+      };
+
+      // Add optional fields if they exist in schema
+      if (submission_type) {
+        insertData.submission_type = submission_type;
+      }
+      if (submission_type === 'rto' && agreement_id) {
+        insertData.agreement_id = agreement_id;
+      }
+
       const { data, error } = await supabase
         .from('driver_submissions')
-        .insert([{
-          driver_id,
-          amount,
-          week,
-          month,
-          notes,
-          submission_type: submission_type || 'weekly',
-          agreement_id: submission_type === 'rto' ? agreement_id : null,
-          submission_date: submission_date || new Date().toISOString().split('T')[0],
-          submission_status: 'Pending',
-          created_at: new Date().toISOString()
-        }])
+        .insert([insertData])
         .select();
 
       if (error) throw error;
@@ -200,14 +208,21 @@ exports.handler = async (event, context) => {
       const driverName = submission.driver?.name || `Driver ${submission.driver_id}`;
       const now = new Date().toISOString();
 
+      // Prepare update data for submission
+      const updateData = {
+        submission_status: 'Approved'
+      };
+
+      // Only update approval fields if they exist in the schema
+      if ('approved_by_role' in submission || !submission.approved_by_role) {
+        updateData.approved_by_role = approvedByRole;
+        updateData.approval_date = now;
+      }
+
       // Update submission status to Approved
       const { error: updateError } = await supabase
         .from('driver_submissions')
-        .update({
-          submission_status: 'Approved',
-          approved_by_role: approvedByRole,
-          approval_date: now
-        })
+        .update(updateData)
         .eq('id', id);
 
       if (updateError) throw updateError;
@@ -216,21 +231,26 @@ exports.handler = async (event, context) => {
       let createdPayment = null;
       let createdRtoPayment = null;
 
-      if (submission.submission_type === 'rto') {
-        // For RTO submissions, create rent_to_own_payments entry
-        if (submission.agreement_id) {
-          const { data: rtoPayment, error: rtoPaymentError } = await supabase
-            .from('rent_to_own_payments')
-            .insert([{
-              agreement_id: submission.agreement_id,
-              amount: submission.amount,
-              payment_method: 'driver_submission',
-              payment_date: submission.submission_date,
-              created_at: now
-            }])
-            .select();
+      // Check if submission_type exists and is 'rto'
+      const isRto = submission?.submission_type === 'rto' && submission?.agreement_id;
 
-          if (rtoPaymentError) throw rtoPaymentError;
+      if (isRto) {
+        // For RTO submissions, create rent_to_own_payments entry
+        const { data: rtoPayment, error: rtoPaymentError } = await supabase
+          .from('rent_to_own_payments')
+          .insert([{
+            agreement_id: submission.agreement_id,
+            amount: submission.amount,
+            payment_method: 'driver_submission',
+            payment_date: submission.submission_date,
+            created_at: now
+          }])
+          .select();
+
+        if (rtoPaymentError) {
+          console.error('RTO Payment Error:', rtoPaymentError);
+          // Continue even if RTO payment creation fails
+        } else {
           createdRtoPayment = rtoPayment?.[0];
 
           // Update RTO agreement with new payment info
@@ -240,26 +260,26 @@ exports.handler = async (event, context) => {
             .eq('id', submission.agreement_id)
             .single();
 
-          if (agreeError) throw agreeError;
+          if (!agreeError && agreement) {
+            const newPaid = (agreement.paid_amount || 0) + submission.amount;
+            const newRemaining = Math.max(0, (agreement.remaining_balance || 0) - submission.amount);
+            const isCompleted = newRemaining <= 0;
 
-          const newPaid = (agreement.paid_amount || 0) + submission.amount;
-          const newRemaining = Math.max(0, (agreement.remaining_balance || 0) - submission.amount);
-          const isCompleted = newRemaining <= 0;
-
-          const { error: updateRtoError } = await supabase
-            .from('rent_to_own_agreements')
-            .update({
-              paid_amount: newPaid,
-              remaining_balance: newRemaining,
-              ...(isCompleted && {
-                agreement_status: 'Completed',
-                ownership_transferred: true,
-                ownership_transferred_date: now
+            const { error: updateRtoError } = await supabase
+              .from('rent_to_own_agreements')
+              .update({
+                paid_amount: newPaid,
+                remaining_balance: newRemaining,
+                ...(isCompleted && {
+                  agreement_status: 'Completed',
+                  ownership_transferred: true,
+                  ownership_transferred_date: now
+                })
               })
-            })
-            .eq('id', submission.agreement_id);
+              .eq('id', submission.agreement_id);
 
-          if (updateRtoError) throw updateRtoError;
+            if (updateRtoError) console.error('RTO Update Error:', updateRtoError);
+          }
         }
       } else {
         // For weekly submissions, create payments entry (default)
@@ -277,7 +297,10 @@ exports.handler = async (event, context) => {
           }])
           .select();
 
-        if (paymentError) throw paymentError;
+        if (paymentError) {
+          console.error('Payment Error:', paymentError);
+          throw paymentError;
+        }
         createdPayment = payment?.[0];
       }
 
@@ -288,7 +311,7 @@ exports.handler = async (event, context) => {
           data: {
             submission_id: id,
             submission_status: 'Approved',
-            submission_type: submission.submission_type,
+            submission_type: submission.submission_type || 'weekly',
             payment: createdPayment || createdRtoPayment
           }
         })
