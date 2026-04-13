@@ -267,11 +267,25 @@ exports.handler = async (event, context) => {
       const agreementId = parseInt(segment);
       const paymentId = parseInt(pathSegments[2]);
 
-      // Mark payment as approved (update rent_to_own_payments if it has approval status)
-      // For now, just return success - the payment was already recorded
+      // Update payment approval status to approved
+      const { data: updated, error: updateError } = await supabase
+        .from('rent_to_own_payments')
+        .update({
+          approval_status: 'approved',
+          approved_at: new Date().toISOString()
+        })
+        .eq('id', paymentId)
+        .eq('agreement_id', agreementId)
+        .select();
+
+      if (updateError) throw updateError;
+
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: 'Payment approved' })
+        body: JSON.stringify({
+          message: 'Payment approved',
+          data: updated?.[0]
+        })
       };
     }
 
