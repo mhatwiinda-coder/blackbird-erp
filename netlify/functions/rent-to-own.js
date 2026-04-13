@@ -48,7 +48,6 @@ exports.handler = async (event, context) => {
           payment_method,
           payment_date,
           created_at,
-          notes,
           agreement_id,
           agreement:rent_to_own_agreements(total_price, paid_amount, remaining_balance, agreement_status, driver_id, vehicle_id, driver:drivers(id, name), vehicle:vehicles(id, plate, make_model))
         `)
@@ -64,7 +63,6 @@ exports.handler = async (event, context) => {
         payment_method: p.payment_method,
         payment_date: p.payment_date,
         created_at: p.created_at,
-        notes: p.notes,
         agreement_id: p.agreement_id,
         driver_name: p.agreement?.driver?.name || 'Unknown',
         vehicle_name: p.agreement?.vehicle?.plate || 'Unknown',
