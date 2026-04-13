@@ -3658,31 +3658,29 @@ let rtoSubmissionsSelectedIds = new Set();
 
 async function renderRtoSubmissions() {
   try {
-    const result = await apiCall('/driver-submissions');
+    const result = await apiCall('/rent-to-own/approvals/pending');
     rtoSubmissions = result.data || [];
 
     document.getElementById('rto-submissions-tbody').innerHTML = rtoSubmissions.map(s => `
       <tr>
         <td style="width:30px;"><input type="checkbox" value="${s.id}" onchange="toggleRtoSubmissionSelect(this)"/></td>
-        <td><strong>${s.driver?.name || 'Unknown'}</strong></td>
-        <td>-</td>
-        <td>-</td>
+        <td><strong>${s.driver_name || 'Unknown'}</strong></td>
+        <td>${s.vehicle_plate || '-'}</td>
+        <td>${s.agreement_id || '-'}</td>
         <td>${fmtK(s.amount)}</td>
-        <td>${new Date(s.submission_date).toLocaleDateString()}</td>
+        <td>${new Date(s.created_at).toLocaleDateString()}</td>
         <td><em>${s.notes || '-'}</em></td>
-        <td>${badgeStatus(s.submission_status)}</td>
+        <td>${badgeStatus(s.approval_status)}</td>
         <td>
-          ${s.submission_status === 'Pending' ? `
-            <button class="btn btn-sm btn-success" onclick="approveDriverSubmission(${s.id})"><i class="fas fa-check"></i></button>
-            <button class="btn btn-sm btn-danger" onclick="rejectDriverSubmission(${s.id})"><i class="fas fa-times"></i></button>
-            <button class="btn btn-sm btn-outline" onclick="deleteSubmission(${s.id})" title="Delete"><i class="fas fa-trash"></i></button>
+          ${s.approval_status === 'pending' ? `
+            <button class="btn btn-sm btn-success" onclick="approveRtoSubmission(${s.id})"><i class="fas fa-check"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="rejectRtoSubmission(${s.id})"><i class="fas fa-times"></i></button>
           ` : `
-            <span style="color:var(--text2);font-size:12px;">${s.submission_status === 'Approved' ? '✓ Approved' : '✗ Rejected'}</span>
-            <button class="btn btn-sm btn-outline" onclick="deleteSubmission(${s.id})" title="Delete"><i class="fas fa-trash"></i></button>
+            <span style="color:var(--text2);font-size:12px;">${s.approval_status === 'approved' ? '✓ Approved' : '✗ Rejected'}</span>
           `}
         </td>
       </tr>
-    `).join('') || '<tr><td colspan="9" style="color:var(--text2);text-align:center">No driver submissions</td></tr>';
+    `).join('') || '<tr><td colspan="9" style="color:var(--text2);text-align:center">No RTO submissions</td></tr>';
 
     updateRtoSubmissionsBadge();
   } catch (error) {
