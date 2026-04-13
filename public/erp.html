@@ -3092,9 +3092,12 @@ function exportPaymentsExcel() {
 async function deletePayment(paymentId) {
   if (!confirm('Delete this payment record? This cannot be undone.')) return;
   try {
-    await apiCall(`/admin-cleanup/delete-payment/${paymentId}`, 'POST');
+    const response = await apiCall(`/admin-cleanup/delete-payment/${paymentId}`, 'POST');
+    console.log('Delete response:', response);
     showNotification('Payment deleted', 'success', 2000);
-    await renderPayments();
+    // Force a full page reload to ensure data is refreshed
+    await new Promise(resolve => setTimeout(resolve, 500));
+    location.reload();
   } catch (error) {
     alert('Failed to delete payment: ' + error.message);
     console.error('Error:', error);
