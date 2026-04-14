@@ -51,9 +51,17 @@ exports.handler = async (event, context) => {
 
     // GET /api/driver-submissions/my-submissions - Get current driver's submissions
     if (httpMethod === 'GET' && pathSegments[0] === 'my-submissions') {
-      const { status, limit = 20, offset = 0, start_date, end_date } = queryStringParameters || {};
+      const { driver_id, status, limit = 20, offset = 0, start_date, end_date } = queryStringParameters || {};
 
-      // Get driver ID from auth token
+      // Require driver_id parameter
+      if (!driver_id) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: 'driver_id parameter required' })
+        };
+      }
+
+      // Get token for validation
       const token = event.headers.authorization?.replace('Bearer ', '');
       if (!token) {
         return {
@@ -62,9 +70,7 @@ exports.handler = async (event, context) => {
         };
       }
 
-      // For now, we'll need to get driver_id from context or make an assumption
-      // The token should be validated to extract driver_id
-      // For MVP, return all submissions (client can filter)
+      // Filter by driver_id to return only this driver's submissions
       let query = supabase
         .from('driver_submissions')
         .select(`
@@ -80,7 +86,8 @@ exports.handler = async (event, context) => {
           approval_date,
           rejection_reason,
           driver:drivers(id, name)
-        `);
+        `)
+        .eq('driver_id', parseInt(driver_id));
 
       if (status) query = query.eq('submission_status', status);
       if (start_date) query = query.gte('submission_date', start_date);

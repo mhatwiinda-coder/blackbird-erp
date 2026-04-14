@@ -1080,7 +1080,7 @@
         try {
             // Fetch driver submissions from backend
             const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
-            const url = `${baseUrl}/api/driver-submissions/my-submissions`;
+            const url = `${baseUrl}/api/driver-submissions/my-submissions?driver_id=${currentDriver.driverId}`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${currentDriver.token}` }
