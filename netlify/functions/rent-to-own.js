@@ -275,6 +275,30 @@ exports.handler = async (event, context) => {
       const agreementId = parseInt(segment);
       const paymentId = parseInt(pathSegments[2]);
 
+      // Fetch the payment to get amount
+      const { data: payment, error: fetchPaymentError } = await supabase
+        .from('rent_to_own_payments')
+        .select('amount')
+        .eq('id', paymentId)
+        .eq('agreement_id', agreementId)
+        .single();
+
+      if (fetchPaymentError) throw fetchPaymentError;
+
+      // Fetch current agreement balances
+      const { data: agreement, error: fetchAgreementError } = await supabase
+        .from('rent_to_own_agreements')
+        .select('paid_amount, remaining_balance')
+        .eq('id', agreementId)
+        .single();
+
+      if (fetchAgreementError) throw fetchAgreementError;
+
+      // Calculate new balances
+      const newPaid = (agreement.paid_amount || 0) + payment.amount;
+      const newRemaining = Math.max(0, (agreement.remaining_balance || 0) - payment.amount);
+      const isCompleted = newRemaining <= 0;
+
       // Update payment approval status to approved
       const { data: updated, error: updateError } = await supabase
         .from('rent_to_own_payments')
@@ -288,11 +312,35 @@ exports.handler = async (event, context) => {
 
       if (updateError) throw updateError;
 
+      // Update agreement balances and status
+      const updateData = {
+        paid_amount: newPaid,
+        remaining_balance: newRemaining
+      };
+
+      if (isCompleted) {
+        updateData.agreement_status = 'Completed';
+        updateData.ownership_transferred = true;
+        updateData.ownership_transferred_date = new Date().toISOString();
+      }
+
+      const { error: updateAgreementError } = await supabase
+        .from('rent_to_own_agreements')
+        .update(updateData)
+        .eq('id', agreementId);
+
+      if (updateAgreementError) throw updateAgreementError;
+
       return {
         statusCode: 200,
         body: JSON.stringify({
-          message: 'Payment approved',
-          data: updated?.[0]
+          message: 'Payment approved and agreement updated',
+          data: updated?.[0],
+          agreement_updated: {
+            paid_amount: newPaid,
+            remaining_balance: newRemaining,
+            agreement_status: isCompleted ? 'Completed' : 'Active'
+          }
         })
       };
     }
