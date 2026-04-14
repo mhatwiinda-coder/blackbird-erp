@@ -38,7 +38,7 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // GET /api/rent-to-own/approvals/pending - Recent pending payments
+    // GET /api/rent-to-own/approvals/pending - Recent pending and approved payments
     if (httpMethod === 'GET' && segment === 'approvals' && pathSegments[1] === 'pending') {
       const { data: payments, error } = await supabase
         .from('rent_to_own_payments')
@@ -47,9 +47,13 @@ exports.handler = async (event, context) => {
           amount,
           payment_method,
           payment_date,
+          approval_status,
+          approved_at,
+          driver_name,
+          vehicle_plate,
           created_at,
           agreement_id,
-          agreement:rent_to_own_agreements(total_price, paid_amount, remaining_balance, agreement_status, driver_id, vehicle_id, driver:drivers(id, name), vehicle:vehicles(id, plate, make_model))
+          agreement:rent_to_own_agreements(total_price, paid_amount, remaining_balance, agreement_status, driver_id, vehicle_id)
         `)
         .order('created_at', { ascending: false })
         .limit(20);
@@ -59,17 +63,21 @@ exports.handler = async (event, context) => {
       // Flatten the response for easier frontend consumption
       const flattened = (payments || []).map(p => ({
         id: p.id,
+        amount: p.amount,
         payment_amount: p.amount,
         payment_method: p.payment_method,
         payment_date: p.payment_date,
         created_at: p.created_at,
         agreement_id: p.agreement_id,
-        driver_name: p.agreement?.driver?.name || 'Unknown',
-        vehicle_name: p.agreement?.vehicle?.plate || 'Unknown',
+        driver_name: p.driver_name || p.agreement?.driver?.name || 'Unknown',
+        vehicle_plate: p.vehicle_plate || 'Unknown',
+        vehicle_name: p.vehicle_plate || 'Unknown',
         total_amount: p.agreement?.total_price || 0,
         paid_amount: p.agreement?.paid_amount || 0,
         remaining_balance: p.agreement?.remaining_balance || 0,
-        agreement_status: p.agreement?.agreement_status || 'Active'
+        agreement_status: p.agreement?.agreement_status || 'Active',
+        approval_status: p.approval_status || 'pending',
+        approved_at: p.approved_at
       }));
 
       return {
