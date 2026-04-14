@@ -13,16 +13,13 @@ exports.handler = async (event, context) => {
 
     // GET /api/payments - List all payments
     if (httpMethod === 'GET' && !id) {
-      const { driver_id, payment_type, date_from, date_to, limit = 50, offset = 0 } = queryStringParameters || {};
+      const { payer_name, payment_type, date_from, date_to, limit = 50, offset = 0 } = queryStringParameters || {};
 
       let query = supabase
         .from('payments')
-        .select(`
-          *,
-          driver:drivers(name, phone)
-        `);
+        .select('*');
 
-      if (driver_id) query = query.eq('driver_id', driver_id);
+      if (payer_name) query = query.ilike('payer_name', `%${payer_name}%`);
       if (payment_type) query = query.eq('payment_type', payment_type);
       if (date_from) query = query.gte('payment_date', date_from);
       if (date_to) query = query.lte('payment_date', date_to);
@@ -63,24 +60,26 @@ exports.handler = async (event, context) => {
 
     // POST /api/payments - Create payment
     if (httpMethod === 'POST' && !id) {
-      const { driver_id, amount, payment_type = 'Manual', notes } = JSON.parse(body);
+      const { payer_name, amount, payment_type = 'Manual', description, payment_status = 'Paid', week, month, payment_date } = JSON.parse(body);
 
-      if (!driver_id || !amount) {
+      if (!payer_name || !amount) {
         return {
           statusCode: 400,
-          body: JSON.stringify({ error: 'Driver ID and amount required' })
+          body: JSON.stringify({ error: 'Payer name and amount required' })
         };
       }
 
       const { data, error } = await supabase
         .from('payments')
         .insert([{
-          driver_id,
+          payer_name,
           amount,
           payment_type,
-          notes,
-          payment_date: new Date().toISOString(),
-          approval_status: 'approved'
+          description,
+          payment_status,
+          week,
+          month,
+          payment_date: payment_date || new Date().toISOString().split('T')[0]
         }])
         .select();
 
