@@ -197,9 +197,9 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // POST /api/rent-to-own/:id/record-payment - Record payment
+    // POST /api/rent-to-own/:id/record-payment - Record payment (immediate update for manual admin entry)
     if (httpMethod === 'POST' && id && pathSegments[1] === 'record-payment') {
-      const { amount, payment_method } = JSON.parse(body);
+      const { amount, payment_method, payment_date } = JSON.parse(body);
 
       // Get current agreement (use segment as agreement ID, not id)
       const agreementId = parseInt(segment);
@@ -212,24 +212,27 @@ exports.handler = async (event, context) => {
       if (agreeError) throw agreeError;
 
       const new_paid = agreement.paid_amount + amount;
-      const new_remaining = agreement.remaining_balance - amount;
+      const new_remaining = Math.max(0, agreement.remaining_balance - amount);
       const is_completed = new_remaining <= 0;
+      const now = new Date().toISOString();
 
-      // Record payment
+      // Record payment with approval_status='approved' (admin is recording it manually, so it's auto-approved)
       const { data: payment, error: payError } = await supabase
         .from('rent_to_own_payments')
         .insert([{
           agreement_id: agreementId,
           amount,
-          payment_method: payment_method || 'cash',
-          payment_date: new Date().toISOString().split('T')[0],
-          created_at: new Date().toISOString()
+          payment_method: payment_method || 'admin_manual',
+          payment_date: payment_date || new Date().toISOString().split('T')[0],
+          approval_status: 'approved',
+          approved_at: now,
+          created_at: now
         }])
         .select();
 
       if (payError) throw payError;
 
-      // Update agreement
+      // Update agreement balances immediately (manual admin entry is auto-approved)
       const updateData = {
         paid_amount: new_paid,
         remaining_balance: new_remaining
@@ -238,7 +241,7 @@ exports.handler = async (event, context) => {
       if (is_completed) {
         updateData.agreement_status = 'Completed';
         updateData.ownership_transferred = true;
-        updateData.ownership_transferred_date = new Date().toISOString();
+        updateData.ownership_transferred_date = now;
       }
 
       const { data: updated, error: updateError } = await supabase
@@ -251,7 +254,16 @@ exports.handler = async (event, context) => {
 
       return {
         statusCode: 200,
-        body: JSON.stringify({ data: updated[0], payment: payment[0] })
+        body: JSON.stringify({
+          message: 'Payment recorded and agreement updated',
+          data: updated[0],
+          payment: payment[0],
+          agreement_updated: {
+            paid_amount: new_paid,
+            remaining_balance: new_remaining,
+            agreement_status: is_completed ? 'Completed' : 'Active'
+          }
+        })
       };
     }
 
