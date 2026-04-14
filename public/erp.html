@@ -3659,7 +3659,8 @@ let rtoSubmissionsSelectedIds = new Set();
 async function renderRtoSubmissions() {
   try {
     const result = await apiCall('/rent-to-own/approvals/pending');
-    rtoSubmissions = result.data || [];
+    // Filter for APPROVED payments only (RTO Driver Submissions shows approved payments)
+    rtoSubmissions = (result.data || []).filter(s => s.approval_status === 'approved');
 
     document.getElementById('rto-submissions-tbody').innerHTML = rtoSubmissions.map(s => `
       <tr>
