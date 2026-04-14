@@ -12,16 +12,15 @@ exports.handler = async (event, context) => {
     const id = pathSegments[0];
 
     if (httpMethod === 'GET' && !id) {
-      const { status, driver_id, limit = 50, offset = 0 } = queryStringParameters || {};
+      const { status, rider_id, limit = 50, offset = 0 } = queryStringParameters || {};
 
       let query = supabase.from('deliveries').select(`
         *,
-        driver:drivers(name, phone),
-        vehicle:vehicles(plate, make_model)
+        rider:drivers(name, phone)
       `);
 
-      if (status) query = query.eq('delivery_status', status);
-      if (driver_id) query = query.eq('assigned_driver_id', parseInt(driver_id));
+      if (status) query = query.eq('status', status);
+      if (rider_id) query = query.eq('rider_id', parseInt(rider_id));
 
       const { data, error, count } = await query
         .order('delivery_date', { ascending: false })
@@ -37,7 +36,7 @@ exports.handler = async (event, context) => {
     if (httpMethod === 'GET' && id) {
       const { data, error } = await supabase
         .from('deliveries')
-        .select('*, driver:drivers(*), vehicle:vehicles(*)')
+        .select('*, rider:drivers(name, phone)')
         .eq('id', id)
         .single();
 

@@ -38,7 +38,7 @@ exports.handler = async (event, context) => {
     if (httpMethod === 'GET' && id) {
       const { data, error } = await supabase
         .from('jobs')
-        .select('*, driver:drivers(*), vehicle:vehicles(*)')
+        .select('*, driver:drivers(name, phone)')
         .eq('id', id)
         .single();
 
