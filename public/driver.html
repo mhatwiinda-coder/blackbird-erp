@@ -1276,12 +1276,23 @@
         })
         .then(r => r.json())
         .then(data => {
-            if (data.data) {
+            if (data.data && Array.isArray(data.data)) {
                 // Filter on client side, not server side
                 const pending = data.data.filter(s => (s.submission_status || '').toLowerCase() === 'pending').length;
                 const approved = data.data.filter(s => (s.submission_status || '').toLowerCase() === 'approved');
-                const approvedTotal = approved.reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
-                const total = data.data.reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
+
+                // Calculate totals with better validation
+                const approvedTotal = approved.reduce((sum, s) => {
+                    const amount = parseFloat(s.amount || 0);
+                    return sum + (isNaN(amount) ? 0 : amount);
+                }, 0);
+
+                const total = data.data.reduce((sum, s) => {
+                    const amount = parseFloat(s.amount || 0);
+                    return sum + (isNaN(amount) ? 0 : amount);
+                }, 0);
+
+                console.log('Summary Stats - Data count:', data.data.length, 'Approved count:', approved.length, 'Approved total:', approvedTotal, 'Total:', total);
 
                 document.getElementById('pending-count').textContent = pending;
                 document.getElementById('approved-total').textContent = 'ZMW' + approvedTotal.toLocaleString('en-NG', {minimumFractionDigits: 2});
