@@ -60,7 +60,7 @@ exports.handler = async (event, context) => {
 
     // ========== BACKDATED PAYMENTS (check first) ==========
 
-    // GET /api/payments/backdating/:driver_id - List backdated payments for a driver
+    // GET /api/payments/backdating/:driver_id - List all payments for a driver (including manually recorded ones)
     if (httpMethod === 'GET' && id === 'backdating' && pathSegments[1]) {
       const driverId = pathSegments[1];
 
@@ -71,7 +71,6 @@ exports.handler = async (event, context) => {
           driver:drivers(name)
         `)
         .eq('driver_id', driverId)
-        .eq('payment_type', 'Driver Submission')
         .order('payment_date', { ascending: false });
 
       if (error) throw error;
