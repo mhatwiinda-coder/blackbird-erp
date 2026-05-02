@@ -3823,6 +3823,9 @@ async function approveRtoSubmission(paymentId) {
     // Refresh BOTH pages: remove from pending and add to approved submissions
     await renderPendingRtoApprovals();
     await renderRtoSubmissions();
+    // Force badge update by resetting counter
+    previousRtoPendingCount = 0;
+    await updatePendingRtoBadge();
     showNotification('RTO payment approved successfully!', 'success', 3000);
   } catch (error) {
     alert('Failed to approve: ' + error.message);
@@ -4093,7 +4096,11 @@ async function approvePendingRtoPayment() {
     );
 
     closeModal('modal-approve-pending-rto');
+    // Refresh immediately - don't wait
     await renderPendingRtoApprovals();
+    // Force badge update by resetting counter
+    previousRtoPendingCount = 0;
+    await updatePendingRtoBadge();
     showNotification('Payment approved successfully!', 'success', 3000);
   } catch (error) {
     console.error('Failed to approve payment:', error);

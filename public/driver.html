@@ -1051,7 +1051,7 @@
             body: JSON.stringify({ driver_id: currentDriver.driverId, amount, week, month, notes: notes || null })
         })
         .then(r => r.json())
-        .then(data => {
+        .then(async (data) => {
             if (data.error) {
                 showStatus(data.error, 'error');
                 return;
@@ -1063,7 +1063,8 @@
             document.getElementById('month-input').value = '';
             document.getElementById('notes-input').value = '';
 
-            loadSubmissions();
+            // AWAIT the refresh to ensure data is loaded before completing
+            await loadSubmissions();
             updateSummary();
         })
         .catch(err => {
