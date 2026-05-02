@@ -11,7 +11,7 @@ exports.handler = async (event, context) => {
       const [driversRes, vehiclesRes, paymentsRes, submissionsRes, rtoPaymentsRes] = await Promise.all([
         supabase.from('drivers').select('*'),
         supabase.from('vehicles').select('*'),
-        supabase.from('payments').select('amount, payment_status'),
+        supabase.from('payments').select('amount, payment_status, payment_type'),
         supabase.from('driver_submissions').select('amount, submission_status'),
         supabase.from('rent_to_own_payments').select('amount')
       ]);
@@ -22,15 +22,18 @@ exports.handler = async (event, context) => {
       const totalDrivers = (driversRes.data || []).length;
       const totalVehicles = (vehiclesRes.data || []).length;
 
-      // Calculate total revenue from all approved sources
+      // Calculate total revenue from all approved sources (avoid double-counting)
+      // Only count from payments table if NOT a driver submission (exclude 'Driver Submission' type)
       const paymentsRevenue = (paymentsRes.data || [])
-        .filter(p => p.payment_status === 'Paid' || p.payment_status === 'Approved')
+        .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') && p.payment_type !== 'Driver Submission')
         .reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
 
+      // Count approved submissions (these come from the driver portal)
       const submissionsRevenue = (submissionsRes.data || [])
         .filter(s => s.submission_status === 'Approved' || s.submission_status === 'approved')
         .reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
 
+      // Count RTO payments separately
       const rtoRevenue = (rtoPaymentsRes.data || [])
         .reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
 
@@ -55,16 +58,16 @@ exports.handler = async (event, context) => {
 
     if (httpMethod === 'GET' && endpoint === 'monthly-revenue') {
       const [paymentsRes, submissionsRes, rtoRes] = await Promise.all([
-        supabase.from('payments').select('amount, payment_date, payment_status'),
+        supabase.from('payments').select('amount, payment_date, payment_status, payment_type'),
         supabase.from('driver_submissions').select('amount, submission_date, submission_status'),
         supabase.from('rent_to_own_payments').select('amount, created_at')
       ]);
 
       const monthlyRevenue = {};
 
-      // Add payments data
+      // Add payments data (exclude Driver Submission types to avoid duplication)
       (paymentsRes.data || [])
-        .filter(p => p.payment_status === 'Paid' || p.payment_status === 'Approved')
+        .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') && p.payment_type !== 'Driver Submission')
         .forEach(p => {
           if (p.payment_date) {
             const month = new Date(p.payment_date).getMonth();
@@ -96,7 +99,7 @@ exports.handler = async (event, context) => {
 
     if (httpMethod === 'GET' && endpoint === 'top-drivers') {
       const [paymentsRes, submissionsRes, driversRes] = await Promise.all([
-        supabase.from('payments').select('driver_id, payer_name, amount, payment_status'),
+        supabase.from('payments').select('driver_id, payer_name, amount, payment_status, payment_type'),
         supabase.from('driver_submissions').select('driver_id, amount, submission_status, driver:drivers(name)'),
         supabase.from('drivers').select('id, name')
       ]);
@@ -109,9 +112,9 @@ exports.handler = async (event, context) => {
         driverMap[d.id] = d.name;
       });
 
-      // Add payments data
+      // Add payments data (exclude Driver Submission types to avoid duplication)
       (paymentsRes.data || [])
-        .filter(p => p.payment_status === 'Paid' || p.payment_status === 'Approved')
+        .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') && p.payment_type !== 'Driver Submission')
         .forEach(p => {
           const name = p.payer_name || (p.driver_id ? driverMap[p.driver_id] : null) || 'Unknown';
           driverEarnings[name] = (driverEarnings[name] || 0) + parseFloat(p.amount || 0);
