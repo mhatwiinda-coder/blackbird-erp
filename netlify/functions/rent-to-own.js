@@ -274,7 +274,7 @@ exports.handler = async (event, context) => {
       const isAdminEntry = !!payment_method;
       const approvalStatus = isAdminEntry ? 'approved' : 'pending';
 
-      // Record payment
+      // Record payment (excluding notes due to Supabase schema cache issue)
       const paymentData = {
         agreement_id: agreementId,
         amount,
@@ -287,9 +287,6 @@ exports.handler = async (event, context) => {
       // Only add optional fields if provided
       if (isAdminEntry) {
         paymentData.approved_at = now;
-      }
-      if (notes) {
-        paymentData.notes = notes;
       }
 
       const { data: payment, error: payError } = await supabase
