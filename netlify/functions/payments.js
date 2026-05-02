@@ -108,7 +108,7 @@ exports.handler = async (event, context) => {
     }
 
     // DELETE /api/payments/:id - Delete payment
-    if (httpMethod === 'DELETE' && id) {
+    if (httpMethod === 'DELETE' && id && id !== 'backdating') {
       const { error } = await supabase
         .from('payments')
         .delete()
@@ -118,6 +118,108 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 200,
         body: JSON.stringify({ message: 'Deleted successfully' })
+      };
+    }
+
+    // ========== BACKDATED PAYMENTS ==========
+
+    // GET /api/payments/backdating/:driver_id - List backdated payments for a driver
+    if (httpMethod === 'GET' && id === 'backdating' && pathSegments[1]) {
+      const driverId = pathSegments[1];
+
+      const { data, error } = await supabase
+        .from('payments')
+        .select(`
+          *,
+          driver:drivers(name)
+        `)
+        .eq('driver_id', driverId)
+        .eq('payment_type', 'Driver Submission')
+        .gte('payment_date', '2025-01-01')  // Backdated payments are from before system implementation
+        .order('payment_date', { ascending: false });
+
+      if (error) throw error;
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          data: (data || []).map(p => ({
+            id: p.id,
+            driver_id: p.driver_id,
+            driver_name: p.driver?.name || p.payer_name,
+            amount: p.amount,
+            payment_date: p.payment_date,
+            payment_type: p.payment_type,
+            week: p.week,
+            month: p.month,
+            description: p.description,
+            payment_status: p.payment_status,
+            created_at: p.created_at
+          })),
+          count: data?.length || 0
+        })
+      };
+    }
+
+    // POST /api/payments/backdating/add - Add a new backdated payment
+    if (httpMethod === 'POST' && id === 'backdating' && pathSegments[1] === 'add') {
+      const { driver_id, amount, payment_date, week, month, description, agreement_id } = JSON.parse(body);
+
+      if (!driver_id || !amount || !payment_date) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: 'Driver ID, amount, and payment date are required' })
+        };
+      }
+
+      // Get driver name for reference
+      const { data: driverData } = await supabase
+        .from('drivers')
+        .select('name')
+        .eq('id', driver_id)
+        .single();
+
+      const { data, error } = await supabase
+        .from('payments')
+        .insert([{
+          driver_id,
+          payer_name: driverData?.name || `Driver ${driver_id}`,
+          amount,
+          payment_date,
+          payment_type: 'Driver Submission',
+          week,
+          month,
+          description: description || `Backdated payment - ${payment_date}`,
+          payment_status: 'Paid',
+          agreement_id: agreement_id || null
+        }])
+        .select();
+
+      if (error) throw error;
+
+      return {
+        statusCode: 201,
+        body: JSON.stringify({
+          message: 'Backdated payment recorded',
+          data: data[0]
+        })
+      };
+    }
+
+    // DELETE /api/payments/backdating/:id - Delete a backdated payment
+    if (httpMethod === 'DELETE' && id === 'backdating' && pathSegments[1]) {
+      const paymentId = pathSegments[1];
+
+      const { error } = await supabase
+        .from('payments')
+        .delete()
+        .eq('id', paymentId);
+
+      if (error) throw error;
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'Backdated payment deleted' })
       };
     }
 

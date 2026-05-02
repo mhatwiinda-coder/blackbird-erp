@@ -3159,28 +3159,32 @@ async function addBackdatedPayment() {
   if (!canWrite()) return;
   try {
     const driverId = parseInt(document.getElementById('bd-driver').value);
-    const paymentData = {
-      driver_id: driverId,
-      payment_date: document.getElementById('bd-date').value + 'T00:00:00Z',
-      amount: parseFloat(document.getElementById('bd-amount').value),
-      category_type: document.getElementById('bd-type').value,
-      rent_to_own_agreement_id: document.getElementById('bd-type').value === 'rent_to_own' ?
-        parseInt(document.getElementById('bd-rto-agreement').value) : null,
-      description: document.getElementById('bd-description').value.trim() || 'Backdated payment'
-    };
+    const paymentDate = document.getElementById('bd-date').value;
+    const amount = parseFloat(document.getElementById('bd-amount').value);
 
-    if (!driverId || !paymentData.payment_date || !paymentData.amount) {
+    if (!driverId || !paymentDate || !amount) {
       return alert('Driver, date, and amount required');
     }
 
+    const paymentData = {
+      driver_id: driverId,
+      payment_date: paymentDate,
+      amount: amount,
+      week: document.getElementById('bd-week')?.value || null,
+      month: document.getElementById('bd-month')?.value || null,
+      description: document.getElementById('bd-description').value.trim() || `Backdated payment - ${paymentDate}`,
+      agreement_id: null
+    };
+
     await apiCall('/payments/backdating/add', 'POST', paymentData);
-    alert('✓ Historical payment recorded. Will sync to driver portal.');
+    alert('✓ Historical payment recorded successfully!');
 
     document.getElementById('bd-driver').value = '';
     document.getElementById('bd-date').value = '';
     document.getElementById('bd-amount').value = '';
     document.getElementById('bd-description').value = '';
-    document.getElementById('bd-type').value = 'weekly_cash';
+    if (document.getElementById('bd-week')) document.getElementById('bd-week').value = '';
+    if (document.getElementById('bd-month')) document.getElementById('bd-month').value = '';
 
     await loadBackdatingRecords();
   } catch (error) {
@@ -3195,47 +3199,62 @@ async function loadBackdatingRecords() {
     const tbody = document.getElementById('backdating-tbody');
 
     if (!drivers.data || drivers.data.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text2);">No backdating records</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text2);">No drivers available</td></tr>';
       return;
     }
 
-    // Also load drivers for dropdown
+    // Load drivers for dropdown
     const driverSelect = document.getElementById('bd-driver');
-    driverSelect.innerHTML = '<option value="">Select Driver...</option>' +
-      drivers.data.map(d => `<option value="${d.id}">${d.name} (ID: ${d.id})</option>`).join('');
+    if (driverSelect) {
+      driverSelect.innerHTML = '<option value="">Select Driver...</option>' +
+        drivers.data.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+    }
 
     let html = '';
     for (const driver of drivers.data) {
       try {
         const response = await apiCall(`/payments/backdating/${driver.id}`);
-        // Handle both wrapped and unwrapped response formats
-        const records = response.data || response;
-        if (Array.isArray(records) && records.length > 0) {
+        const records = response.data || [];
+
+        if (records && records.length > 0) {
           records.forEach(r => {
-            const rtoLabel = r.rent_to_own_agreement_id ? `#${r.rent_to_own_agreement_id}` : '—';
             html += `<tr>
-              <td>${driver.name}</td>
+              <td><strong>${driver.name}</strong></td>
               <td>${new Date(r.payment_date).toLocaleDateString()}</td>
-              <td>K${parseFloat(r.amount || 0).toFixed(2)}</td>
-              <td>${r.category_type === 'rent_to_own' ? '<span style="color:#3498db;">R-T-O</span>' : 'Weekly'}</td>
-              <td>${rtoLabel}</td>
-              <td><span class="badge" style="background:#f39c12; color:white;">${r.is_applied ? 'Applied' : 'Pending'}</span></td>
-              <td>${!r.is_applied ? `<button class="btn btn-xs" style="padding:4px 8px;font-size:11px;" onclick="alert('Auto-applied to driver portal')">Applied</button>` : '—'}</td>
+              <td style="font-weight:bold; color:#3090e8;">K${parseFloat(r.amount || 0).toLocaleString('en', {minimumFractionDigits: 2})}</td>
+              <td>${r.payment_type === 'Driver Submission' ? 'Driver Payment' : r.payment_type}</td>
+              <td>${r.week ? `Week ${r.week}` : (r.month ? `Month ${r.month}` : '—')}</td>
+              <td>${r.description || '—'}</td>
+              <td><span class="badge" style="background:#27ae60; color:white;">RECORDED</span></td>
+              <td><button class="btn btn-outline btn-xs" onclick="deleteBackdatedPayment(${r.id}, '${driver.name}')" style="color:#e74c3c; padding:4px 8px;"><i class="fas fa-trash"></i></button></td>
             </tr>`;
           });
         }
       } catch (err) {
         console.error('Error loading backdating for driver', driver.id, err);
+        // Continue loading other drivers even if one fails
       }
     }
 
-    tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center; color:var(--text2);">No backdating records</td></tr>';
+    tbody.innerHTML = html || '<tr><td colspan="8" style="text-align:center; color:var(--text2);">No backdated payments recorded</td></tr>';
   } catch (error) {
     console.error('Error loading backdating records:', error);
     const tbody = document.getElementById('backdating-tbody');
     if (tbody) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text2);">Error loading records</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text2);">Error loading records</td></tr>';
     }
+  }
+}
+
+async function deleteBackdatedPayment(paymentId, driverName) {
+  if (!confirm(`Delete backdated payment for ${driverName}?`)) return;
+
+  try {
+    await apiCall(`/payments/backdating/${paymentId}`, 'DELETE');
+    await loadBackdatingRecords();
+    showNotification('Backdated payment deleted', 'success', 3000);
+  } catch (error) {
+    alert('Error deleting payment: ' + error.message);
   }
 }
 
