@@ -33,11 +33,11 @@ exports.handler = async (event, context) => {
         .filter(s => s.submission_status === 'Approved' || s.submission_status === 'approved')
         .reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
 
-      // Count from payments table ONLY for payments that are NOT driver-related
-      // Exclude ALL driver payment types: 'Driver Submission', 'Driver Weekly Cashing', 'Weekly Cashing'
+      // Count from payments table ONLY for payments NOT already in submissions
+      // Exclude ONLY 'Driver Weekly Cashing' (these are duplicates from submissions)
+      // INCLUDE 'Driver Submission' (these are backdated payments manually recorded)
       const paymentsRevenue = (paymentsRes.data || [])
         .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') &&
-                     p.payment_type !== 'Driver Submission' &&
                      p.payment_type !== 'Driver Weekly Cashing' &&
                      p.payment_type !== 'Weekly Cashing')
         .reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
@@ -74,10 +74,9 @@ exports.handler = async (event, context) => {
 
       const monthlyRevenue = {};
 
-      // Add payments data (exclude ALL driver payment types to avoid duplication with submissions)
+      // Add payments data (exclude ONLY duplicate types, include backdated payments)
       (paymentsRes.data || [])
         .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') &&
-                     p.payment_type !== 'Driver Submission' &&
                      p.payment_type !== 'Driver Weekly Cashing' &&
                      p.payment_type !== 'Weekly Cashing')
         .forEach(p => {
@@ -124,10 +123,9 @@ exports.handler = async (event, context) => {
         driverMap[d.id] = d.name;
       });
 
-      // Add payments data (exclude ALL driver payment types to avoid duplication with submissions)
+      // Add payments data (exclude ONLY duplicate types, include backdated payments)
       (paymentsRes.data || [])
         .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') &&
-                     p.payment_type !== 'Driver Submission' &&
                      p.payment_type !== 'Driver Weekly Cashing' &&
                      p.payment_type !== 'Weekly Cashing')
         .forEach(p => {
