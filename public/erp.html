@@ -3658,33 +3658,83 @@ async function viewRentToOwn(id) {
     const result = await apiCall(`/rent-to-own/${id}`);
     const a = result;
 
-    let paymentHistory = '<strong>Payment History:</strong><br>';
-    if (a.payments && a.payments.length > 0) {
-      paymentHistory += a.payments.map(p =>
-        `${p.payment_date}: K${p.payment_amount} ${p.notes ? '(' + p.notes + ')' : ''}`
-      ).join('<br>');
+    // Store for deletion
+    currentRentToOwnDetails = a;
+
+    // Build payment history HTML
+    let paymentHistoryHtml = '';
+    if (a.payment_history && a.payment_history.length > 0) {
+      paymentHistoryHtml = `
+        <div style="background:var(--bg2); padding:15px; border-radius:6px; max-height:300px; overflow-y:auto;">
+          <div style="font-size:12px; color:var(--text2); font-weight:bold; margin-bottom:10px;">PAYMENT RECORDS (${a.payment_history.length})</div>
+          ${a.payment_history.map(p => `
+            <div style="background:var(--bg3); padding:10px; margin-bottom:8px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
+              <div style="flex:1;">
+                <div style="font-weight:bold;">${p.payment_date || '—'}: <span style="color:#3090e8;">K${parseFloat(p.amount || 0).toLocaleString('en', {minimumFractionDigits: 2})}</span></div>
+                <div style="font-size:12px; color:var(--text2);">${p.payment_method || 'driver_submission'} | ${badgeStatus(p.approval_status)}</div>
+                ${p.notes ? `<div style="font-size:12px; margin-top:5px;"><em>${p.notes}</em></div>` : ''}
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="confirmDeleteRtoPayment(${id}, ${p.id}, ${p.amount})" title="Delete this payment" style="color:#e74c3c; margin-left:10px;"><i class="fas fa-trash"></i></button>
+            </div>
+          `).join('')}
+        </div>
+      `;
     } else {
-      paymentHistory += 'No payments recorded yet.';
+      paymentHistoryHtml = '<div style="color:var(--text2); padding:10px;">No payments recorded yet.</div>';
     }
 
-    const message = `
-Driver: ${a.driver_name}
-Vehicle: ${a.vehicle_plate}
-Total: K${a.total_amount}
-Paid: K${a.paid_amount}
-Balance: K${a.remaining_balance}
-Progress: ${Math.round((a.paid_amount / a.total_amount) * 100)}%
-Status: ${a.agreement_status}
-Ownership Transferred: ${a.ownership_transferred ? 'Yes (' + a.ownership_transferred_date + ')' : 'No'}
+    // Show in modal
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.style.cssText = 'position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; z-index:9999;';
+    modal.id = 'rto-details-modal';
+    modal.innerHTML = `
+      <div class="modal" style="max-width:600px; max-height:90vh; overflow-y:auto;">
+        <div class="modal-header">
+          <div class="modal-title">RTO Agreement Details</div>
+          <button class="modal-close" onclick="document.getElementById('rto-details-modal').remove()">×</button>
+        </div>
+        <div class="modal-body">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px; font-size:14px;">
+            <div><strong>Driver:</strong> ${a.driver_name || '—'}</div>
+            <div><strong>Vehicle:</strong> ${a.vehicle_plate || '—'}</div>
+            <div><strong>Total Amount:</strong> <span style="color:#3090e8; font-weight:bold;">K${parseFloat(a.total_amount).toLocaleString('en', {minimumFractionDigits: 2})}</span></div>
+            <div><strong>Paid to Date:</strong> <span style="color:#30c060; font-weight:bold;">K${parseFloat(a.paid_amount).toLocaleString('en', {minimumFractionDigits: 2})}</span></div>
+            <div><strong>Remaining:</strong> <span style="color:#f08080; font-weight:bold;">K${parseFloat(a.remaining_balance).toLocaleString('en', {minimumFractionDigits: 2})}</span></div>
+            <div><strong>Progress:</strong> ${Math.round((a.paid_amount / a.total_amount) * 100)}%</div>
+            <div><strong>Status:</strong> ${badgeStatus(a.agreement_status)}</div>
+            <div><strong>Ownership Transferred:</strong> ${a.ownership_transferred ? 'Yes (' + a.ownership_transferred_date + ')' : 'No'}</div>
+          </div>
 
-${paymentHistory}
+          ${paymentHistoryHtml}
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="document.getElementById('rto-details-modal').remove()">Close</button>
+        </div>
+      </div>
     `;
-    alert(message);
+    document.body.appendChild(modal);
   } catch (error) {
     console.error('Failed to view rent-to-own details:', error);
     alert('Failed to load details');
   }
 }
+
+async function confirmDeleteRtoPayment(agreementId, paymentId, amount) {
+  const confirmed = confirm(`Delete K${parseFloat(amount).toLocaleString('en', {minimumFractionDigits: 2})} payment?\n\nThis will reverse the balance on the agreement.`);
+  if (!confirmed) return;
+
+  try {
+    await apiCall(`/rent-to-own/${agreementId}/delete-payment/${paymentId}`, 'DELETE');
+    await renderRentToOwn();
+    document.getElementById('rto-details-modal').remove();
+    showNotification('Payment deleted and balance reversed', 'success', 3000);
+  } catch (error) {
+    alert('Failed to delete payment: ' + error.message);
+  }
+}
+
+let currentRentToOwnDetails = null;
 
 async function deleteRentToOwn(id) {
   if (!confirm('Delete this rent-to-own agreement? This action cannot be undone.')) return;
