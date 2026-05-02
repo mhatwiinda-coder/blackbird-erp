@@ -32,9 +32,30 @@ exports.handler = async (event, context) => {
       const { data, error } = await query.order('created_at', { ascending: false });
 
       if (error) throw error;
+
+      // Flatten nested data for frontend consumption
+      const flattened = (data || []).map(a => ({
+        id: a.id,
+        driver_id: a.driver_id,
+        vehicle_id: a.vehicle_id,
+        total_price: a.total_price,
+        total_amount: a.total_price, // Alias for frontend compatibility
+        paid_amount: a.paid_amount,
+        remaining_balance: a.remaining_balance,
+        agreement_status: a.agreement_status,
+        agreement_date: a.agreement_date,
+        ownership_transferred: a.ownership_transferred,
+        ownership_transferred_date: a.ownership_transferred_date,
+        created_at: a.created_at,
+        updated_at: a.updated_at,
+        driver_name: a.driver?.name || 'Unknown',
+        vehicle_name: a.vehicle?.make_model || 'Unknown',
+        vehicle_plate: a.vehicle?.plate || 'Unknown'
+      }));
+
       return {
         statusCode: 200,
-        body: JSON.stringify({ data: data || [] })
+        body: JSON.stringify({ data: flattened })
       };
     }
 
@@ -139,9 +160,30 @@ exports.handler = async (event, context) => {
 
       if (paymentError) throw paymentError;
 
+      // Flatten nested data for frontend consistency
+      const flattened = {
+        id: data.id,
+        driver_id: data.driver_id,
+        vehicle_id: data.vehicle_id,
+        total_price: data.total_price,
+        total_amount: data.total_price,
+        paid_amount: data.paid_amount,
+        remaining_balance: data.remaining_balance,
+        agreement_status: data.agreement_status,
+        agreement_date: data.agreement_date,
+        ownership_transferred: data.ownership_transferred,
+        ownership_transferred_date: data.ownership_transferred_date,
+        created_at: data.created_at,
+        updated_at: data.updated_at,
+        driver_name: data.driver?.name || 'Unknown',
+        vehicle_name: data.vehicle?.make_model || 'Unknown',
+        vehicle_plate: data.vehicle?.plate || 'Unknown',
+        payment_history: payments || []
+      };
+
       return {
         statusCode: 200,
-        body: JSON.stringify({ ...data, payment_history: payments || [] })
+        body: JSON.stringify(flattened)
       };
     }
 
