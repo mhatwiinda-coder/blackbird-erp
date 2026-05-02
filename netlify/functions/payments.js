@@ -165,7 +165,7 @@ exports.handler = async (event, context) => {
 
     // POST /api/payments - Create payment
     if (httpMethod === 'POST' && !id) {
-      const { payer_name, amount, payment_type = 'Manual', description, payment_status = 'Paid', week, month, payment_date } = JSON.parse(body);
+      const { payer_name, driver_id, amount, payment_type = 'Manual', description, payment_status = 'Paid', week, month, payment_date } = JSON.parse(body);
 
       if (!payer_name || !amount) {
         return {
@@ -178,6 +178,7 @@ exports.handler = async (event, context) => {
         .from('payments')
         .insert([{
           payer_name,
+          driver_id: driver_id || null,
           amount,
           payment_type,
           description,

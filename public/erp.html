@@ -2969,10 +2969,12 @@ async function openPaymentRecordModal() {
     // Populate the driver dropdown
     const driverSelect = document.getElementById('p-name');
     driverSelect.innerHTML = '<option value="">Select Driver...</option>';
+    window.driverMap = {}; // Store driver mapping for later lookup
     drivers.forEach(driver => {
       const option = document.createElement('option');
-      option.value = driver.name;
+      option.value = driver.id; // Store driver ID, not name
       option.textContent = `${driver.name} (${driver.plate || 'No vehicle'})`;
+      window.driverMap[driver.id] = driver; // Map ID to driver object
       driverSelect.appendChild(option);
     });
 
@@ -3155,8 +3157,20 @@ async function savePaymentWithType() {
   if (!canWrite()) return;
   try {
     const paymentType = document.getElementById('p-payment-type').value;
+    const driverId = document.getElementById('p-name').value.trim();
+    let payerName = '';
+
+    // If a driver is selected, get driver name from map; otherwise allow free-form entry
+    if (driverId) {
+      const driver = window.driverMap && window.driverMap[driverId];
+      payerName = driver ? driver.name : driverId; // Use driver name or fallback to ID
+    } else {
+      payerName = document.getElementById('p-name').textContent || ''; // For other payments
+    }
+
     const paymentData = {
-      payer_name: document.getElementById('p-name').value.trim(),
+      payer_name: payerName,
+      driver_id: driverId ? parseInt(driverId) : null, // Include driver ID if selected
       payment_type: paymentType,
       amount: parseFloat(document.getElementById('p-amount').value),
       payment_date: document.getElementById('p-payment-date').value + 'T00:00:00Z',
