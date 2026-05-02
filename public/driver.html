@@ -1078,16 +1078,40 @@
 
     async function loadSubmissions() {
         try {
-            // Fetch driver submissions from backend
             const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
-            const url = `${baseUrl}/api/driver-submissions/my-submissions?driver_id=${currentDriver.driverId}`;
-            const response = await fetch(url, {
+
+            // Fetch driver submissions from backend
+            const submissionsUrl = `${baseUrl}/api/driver-submissions/my-submissions?driver_id=${currentDriver.driverId}`;
+            const submissionsResponse = await fetch(submissionsUrl, {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${currentDriver.token}` }
             });
-            const data = await response.json();
+            const submissionsData = await submissionsResponse.json();
+            const submissions = submissionsData.data || [];
 
-            allDriverSubmissions = data.data || [];
+            // Fetch backdated payments from payments table
+            const paymentsUrl = `${baseUrl}/api/payments?driver_id=${currentDriver.driverId}`;
+            const paymentsResponse = await fetch(paymentsUrl, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${currentDriver.token}` }
+            });
+            const paymentsData = await paymentsResponse.json();
+
+            // Format payments as submission-like objects for display
+            const backdatedPayments = (paymentsData.data || []).map(p => ({
+                id: p.id,
+                amount: p.amount,
+                submission_date: p.payment_date,
+                submission_type: p.payment_type === 'Driver Submission' ? 'weekly' : 'other',
+                submission_status: 'Approved',
+                week: p.week || null,
+                month: p.month || null,
+                notes: p.description || p.notes,
+                is_backdated: true
+            }));
+
+            // Merge submissions and backdated payments
+            allDriverSubmissions = [...submissions, ...backdatedPayments];
             filterDriverSubmissions();
         } catch (err) {
             console.error('Error loading submissions:', err);
