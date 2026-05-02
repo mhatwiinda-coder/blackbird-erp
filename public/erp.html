@@ -1961,11 +1961,17 @@ async function apiCall(endpoint, method = 'GET', data = null) {
 
     // === DASHBOARD ===
     if (parts[0] === 'dashboard') {
-      if (parts[1] === 'stats') return sbRpc('dashboard_stats');
-      if (parts[1] === 'monthly-revenue') { const d = await sbRpc('monthly_revenue'); return { data: d || [] }; }
-      if (parts[1] === 'top-drivers') { const d = await sbRpc('top_drivers'); return { data: d || [] }; }
-      if (parts[1] === 'alerts') { const d = await sbRpc('dashboard_alerts'); return { alerts: d || [] }; }
-      return {};
+      const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+      const url = baseUrl + '/api/dashboard' + (parts[1] ? '/' + parts[1] : '');
+      const response = await fetch(url);
+      return await response.json();
+    }
+
+    // === VEHICLE MAINTENANCE ALERTS ===
+    if (parts[0] === 'vehicle-maintenance-alerts') {
+      const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+      const response = await fetch(baseUrl + '/api/vehicle-maintenance-alerts');
+      return await response.json();
     }
 
     // === WEBSITE ACTIVITY ===
