@@ -93,10 +93,12 @@ CREATE TABLE IF NOT EXISTS payments (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   payment_date TEXT NOT NULL,
   payer_name TEXT NOT NULL,
+  driver_id BIGINT REFERENCES drivers(id) ON DELETE SET NULL,
   payment_type TEXT NOT NULL,
   description TEXT,
   amount DECIMAL(10,2) NOT NULL,
   week INTEGER,
+  month INTEGER,
   payment_status TEXT DEFAULT 'Paid',
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
