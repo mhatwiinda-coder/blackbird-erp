@@ -83,6 +83,12 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "/api/admin-cleanup*"
+  to = "/.netlify/functions/admin-cleanup"
+  status = 200
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

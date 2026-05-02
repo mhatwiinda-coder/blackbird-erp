@@ -939,7 +939,8 @@
     }
 
     // Check cache on page load
-    checkAndClearCache();
+    // DISABLED: Causing infinite reload bootloop - will re-enable once /api/version fully deployed
+    // checkAndClearCache();
 
     // ===== INITIALIZATION =====
     window.addEventListener('load', () => {
