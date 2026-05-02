@@ -1086,7 +1086,7 @@
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${currentDriver.token}` }
             });
-            const submissionsData = await submissionsResponse.json();
+            const submissionsData = submissionsResponse.ok ? await submissionsResponse.json() : { data: [] };
             const submissions = submissionsData.data || [];
 
             // Fetch backdated payments from payments table
@@ -1095,7 +1095,7 @@
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${currentDriver.token}` }
             });
-            const paymentsData = await paymentsResponse.json();
+            const paymentsData = paymentsResponse.ok ? await paymentsResponse.json() : { data: [] };
 
             // Format payments as submission-like objects for display
             const backdatedPayments = (paymentsData.data || []).map(p => ({
