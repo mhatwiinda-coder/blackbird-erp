@@ -16,6 +16,8 @@ exports.handler = async (event, context) => {
         supabase.from('rent_to_own_payments').select('amount')
       ]);
 
+      console.log('Dashboard stats - Drivers:', driversRes.data?.length, 'Vehicles:', vehiclesRes.data?.length, 'Errors:', driversRes.error, vehiclesRes.error);
+
       // Count active drivers and vehicles
       const totalDrivers = (driversRes.data || []).length;
       const totalVehicles = (vehiclesRes.data || []).length;

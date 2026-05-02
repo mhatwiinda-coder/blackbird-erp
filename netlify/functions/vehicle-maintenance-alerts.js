@@ -25,6 +25,8 @@ exports.handler = async (event, context) => {
 
       if (vehicleError) throw vehicleError;
 
+      console.log('Vehicle maintenance alerts - Found vehicles:', vehicles?.length, 'with maintenance dates:', vehicles?.filter(v => v.road_tax_due || v.insurance_due).length);
+
       const today = new Date();
       const alerts = [];
 
