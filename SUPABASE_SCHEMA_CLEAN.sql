@@ -256,6 +256,13 @@ ALTER TABLE driver_submissions
 ADD CONSTRAINT fk_driver_submissions_agreement
 FOREIGN KEY (agreement_id) REFERENCES rent_to_own_agreements(id) ON DELETE SET NULL;
 
+-- =====================================================
+-- 3.5 ADD MISSING COLUMNS TO EXISTING TABLES
+-- =====================================================
+
+ALTER TABLE payments ADD COLUMN IF NOT EXISTS month INTEGER;
+ALTER TABLE payments ADD COLUMN IF NOT EXISTS week INTEGER;
+
 -- 3.3 RENT-TO-OWN PAYMENTS TABLE
 CREATE TABLE IF NOT EXISTS rent_to_own_payments (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -327,6 +334,13 @@ ALTER TABLE rent_to_own_agreements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE rent_to_own_payments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE driver_accounts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE driver_sessions ENABLE ROW LEVEL SECURITY;
+
+-- Drop existing policies if they exist (to avoid conflicts)
+DROP POLICY IF EXISTS "Allow all for anon" ON driver_submissions;
+DROP POLICY IF EXISTS "Allow all for anon" ON rent_to_own_agreements;
+DROP POLICY IF EXISTS "Allow all for anon" ON rent_to_own_payments;
+DROP POLICY IF EXISTS "Restrict driver_accounts to RPC only" ON driver_accounts;
+DROP POLICY IF EXISTS "Restrict driver_sessions to RPC only" ON driver_sessions;
 
 -- Permissive policies for data tables (allow anon access via APIs)
 CREATE POLICY "Allow all for anon" ON driver_submissions FOR ALL TO anon USING (true) WITH CHECK (true);
@@ -496,9 +510,11 @@ $$ LANGUAGE sql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION monthly_revenue()
 RETURNS json AS $$
   SELECT coalesce(json_agg(row_to_json(t)), '[]'::json) FROM (
-    SELECT month, sum(amount) as revenue
-    FROM payments WHERE payment_status = 'Paid' AND month IS NOT NULL
-    GROUP BY month ORDER BY month
+    SELECT COALESCE(month, EXTRACT(MONTH FROM (payment_date::DATE))::INTEGER, 0) as month,
+           sum(amount) as revenue
+    FROM payments WHERE payment_status = 'Paid'
+    GROUP BY COALESCE(month, EXTRACT(MONTH FROM (payment_date::DATE))::INTEGER, 0)
+    ORDER BY COALESCE(month, EXTRACT(MONTH FROM (payment_date::DATE))::INTEGER, 0)
   ) t;
 $$ LANGUAGE sql SECURITY DEFINER;
 

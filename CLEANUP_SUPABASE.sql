@@ -31,11 +31,8 @@ DELETE FROM jobs;
 -- 8. Clear deliveries (test data only)
 DELETE FROM deliveries;
 
--- 9. Clear logs (test data only)
-DELETE FROM logs;
-
--- 10. Clear vehicle maintenance (test data only)
-DELETE FROM mechanic_logs;
+-- 9. Clear mechanic logs (test data only)
+DELETE FROM mechanics;
 
 -- 11. Clear driver sessions but keep structure
 DELETE FROM driver_sessions;

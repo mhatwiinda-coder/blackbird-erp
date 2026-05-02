@@ -477,6 +477,67 @@ exports.handler = async (event, context) => {
       };
     }
 
+    // DELETE /api/rent-to-own/:agreement_id/delete-payment/:payment_id - Delete an RTO payment and reverse balance
+    if (httpMethod === 'DELETE' && segment && !isNaN(segment) && id === 'delete-payment' && pathSegments[2]) {
+      const agreementId = parseInt(segment);
+      const paymentId = parseInt(pathSegments[2]);
+
+      // Fetch the payment to get the amount
+      const { data: payment, error: fetchError } = await supabase
+        .from('rent_to_own_payments')
+        .select('amount')
+        .eq('id', paymentId)
+        .eq('agreement_id', agreementId)
+        .single();
+
+      if (fetchError) throw fetchError;
+      if (!payment) {
+        return {
+          statusCode: 404,
+          body: JSON.stringify({ error: 'Payment not found' })
+        };
+      }
+
+      // Delete the payment
+      const { error: deleteError } = await supabase
+        .from('rent_to_own_payments')
+        .delete()
+        .eq('id', paymentId);
+
+      if (deleteError) throw deleteError;
+
+      // Fetch current agreement balances to reverse them
+      const { data: agreement } = await supabase
+        .from('rent_to_own_agreements')
+        .select('paid_amount, remaining_balance, agreement_status, ownership_transferred')
+        .eq('id', agreementId)
+        .single();
+
+      if (agreement) {
+        const updateData = {
+          paid_amount: Math.max(0, agreement.paid_amount - payment.amount),
+          remaining_balance: (agreement.remaining_balance || 0) + payment.amount
+        };
+
+        // If agreement was completed due to this payment, mark it as active again
+        if (agreement.agreement_status === 'Completed' && agreement.ownership_transferred) {
+          updateData.agreement_status = 'Active';
+          updateData.ownership_transferred = false;
+          updateData.ownership_transferred_date = null;
+        }
+
+        await supabase
+          .from('rent_to_own_agreements')
+          .update(updateData)
+          .eq('id', agreementId);
+      }
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'Payment deleted and balance reversed' })
+      };
+    }
+
     return {
       statusCode: 404,
       body: JSON.stringify({ error: 'Endpoint not found' })
