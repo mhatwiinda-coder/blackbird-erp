@@ -74,7 +74,7 @@ exports.handler = async (event, context) => {
           vehicle_plate,
           created_at,
           agreement_id,
-          agreement:rent_to_own_agreements(total_price, paid_amount, remaining_balance, agreement_status, driver_id, vehicle_id)
+          agreement:rent_to_own_agreements(total_price, paid_amount, remaining_balance, agreement_status, driver_id, vehicle_id, driver:drivers(name), vehicle:vehicles(plate, make_model))
         `)
         .order('created_at', { ascending: false })
         .limit(20);
@@ -91,8 +91,8 @@ exports.handler = async (event, context) => {
         created_at: p.created_at,
         agreement_id: p.agreement_id,
         driver_name: p.driver_name || p.agreement?.driver?.name || 'Unknown',
-        vehicle_plate: p.vehicle_plate || 'Unknown',
-        vehicle_name: p.vehicle_plate || 'Unknown',
+        vehicle_plate: p.vehicle_plate || p.agreement?.vehicle?.plate || 'Unknown',
+        vehicle_name: p.agreement?.vehicle?.make_model || p.vehicle_plate || 'Unknown',
         total_amount: p.agreement?.total_price || 0,
         paid_amount: p.agreement?.paid_amount || 0,
         remaining_balance: p.agreement?.remaining_balance || 0,
