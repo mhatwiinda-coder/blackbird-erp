@@ -1110,8 +1110,12 @@
                 is_backdated: true
             }));
 
+            // Deduplicate: only add backdated payments that don't already exist by ID
+            const existingIds = new Set(submissions.map(s => s.id));
+            const uniqueBackdatedPayments = backdatedPayments.filter(p => !existingIds.has(p.id));
+
             // Merge submissions and backdated payments
-            allDriverSubmissions = [...submissions, ...backdatedPayments];
+            allDriverSubmissions = [...submissions, ...uniqueBackdatedPayments];
             filterDriverSubmissions();
         } catch (err) {
             console.error('Error loading submissions:', err);
