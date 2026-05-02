@@ -2010,6 +2010,37 @@ async function apiCall(endpoint, method = 'GET', data = null) {
       }
     }
 
+    // === ADMIN CLEANUP (Local API) ===
+    if (parts[0] === 'admin-cleanup') {
+      const trimmedPath = path.startsWith('/') ? path.slice(1) : path;
+      const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+      const localPath = baseUrl + '/api/' + trimmedPath + (qs ? '?' + qs : '');
+      const headers = { 'Content-Type': 'application/json' };
+      if (authToken) {
+        headers['Authorization'] = 'Bearer ' + authToken;
+      }
+      const response = await fetch(localPath, {
+        method: method,
+        headers: headers,
+        body: data ? JSON.stringify(data) : undefined
+      });
+      const responseText = await response.text();
+      console.log(`[ADMIN-CLEANUP] Status: ${response.status}, Response:`, responseText);
+      if (!response.ok) {
+        try {
+          const errorData = JSON.parse(responseText);
+          throw new Error('API error: ' + (errorData.error || response.statusText));
+        } catch (e) {
+          throw new Error('API error: ' + response.statusText + ' - ' + responseText);
+        }
+      }
+      try {
+        return JSON.parse(responseText);
+      } catch (e) {
+        return responseText;
+      }
+    }
+
     // === CRUD ===
     const key = parts[0];
     const table = TABLE_MAP[key];
