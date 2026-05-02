@@ -1062,10 +1062,8 @@
             document.getElementById('month-input').value = '';
             document.getElementById('notes-input').value = '';
 
-            setTimeout(() => {
-                loadSubmissions();
-                updateSummary();
-            }, 500);
+            loadSubmissions();
+            updateSummary();
         })
         .catch(err => {
             showStatus('Error submitting payment', 'error');
@@ -1124,13 +1122,14 @@
         }
 
         tbody.innerHTML = filtered.map(submission => {
-            const typeLabel = submission.submission_type === 'rto' ?
+            const typeLabel = (submission.submission_type ?? 'weekly') === 'rto' ?
                 '<span style="background: #3498db; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px;">R-T-O</span>' :
                 '<span style="background: #27ae60; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px;">Weekly</span>';
 
-            const statusLabel = submission.submission_status?.toLowerCase() === 'pending' ?
+            const status = (submission.submission_status ?? 'Pending').toLowerCase();
+            const statusLabel = status === 'pending' ?
                 '<span class="badge" style="background: #f39c12; color: white;">Pending</span>' :
-                submission.submission_status?.toLowerCase() === 'approved' ?
+                status === 'approved' ?
                 '<span class="badge" style="background: #27ae60; color: white;">Approved</span>' :
                 '<span class="badge" style="background: #e74c3c; color: white;">Rejected</span>';
 
@@ -1479,14 +1478,12 @@
             document.getElementById('rto-payment-amount').value = '';
             document.getElementById('rto-notes-input').value = '';
 
-            // Reload data
-            setTimeout(() => {
-                loadRtoAgreements();
-                loadSubmissions();
-                updateSummary();
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Record Rent-to-Own Payment';
-            }, 500);
+            // Immediately refresh data (don't wait 500ms)
+            await loadRtoAgreements();
+            await loadSubmissions();
+            updateSummary();
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Record Rent-to-Own Payment';
         } catch (err) {
             showStatus('Error submitting payment. Please try again.', 'error');
             console.error(err);

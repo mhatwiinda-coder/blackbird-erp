@@ -201,6 +201,14 @@ exports.handler = async (event, context) => {
     if (httpMethod === 'POST' && id && pathSegments[1] === 'record-payment') {
       const { amount, payment_method, payment_date } = JSON.parse(body);
 
+      // Validate amount
+      if (!amount || amount <= 0) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: 'Amount must be greater than 0' })
+        };
+      }
+
       // Get current agreement (use segment as agreement ID, not id)
       const agreementId = parseInt(segment);
       const { data: agreement, error: agreeError } = await supabase
@@ -210,6 +218,19 @@ exports.handler = async (event, context) => {
         .single();
 
       if (agreeError) throw agreeError;
+
+      // Validate agreement exists
+      if (!agreement) {
+        return {
+          statusCode: 404,
+          body: JSON.stringify({ error: 'Agreement not found' })
+        };
+      }
+
+      // Warn if payment exceeds remaining balance (but allow it)
+      if (amount > agreement.remaining_balance) {
+        console.warn(`Payment ${amount} exceeds remaining balance ${agreement.remaining_balance}. Agreement will be completed.`);
+      }
 
       const new_paid = agreement.paid_amount + amount;
       const new_remaining = Math.max(0, agreement.remaining_balance - amount);
@@ -267,9 +288,19 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // DELETE /api/rent-to-own/:id - Delete agreement
+    // DELETE /api/rent-to-own/:id - Delete agreement (with cascade cleanup)
     if (httpMethod === 'DELETE' && segment && !isNaN(segment) && !id) {
       const agreementId = parseInt(segment);
+
+      // First delete all related payments (cascade cleanup)
+      const { error: paymentDeleteError } = await supabase
+        .from('rent_to_own_payments')
+        .delete()
+        .eq('agreement_id', agreementId);
+
+      if (paymentDeleteError) throw paymentDeleteError;
+
+      // Then delete the agreement
       const { error } = await supabase
         .from('rent_to_own_agreements')
         .delete()
@@ -278,7 +309,7 @@ exports.handler = async (event, context) => {
       if (error) throw error;
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: 'Agreement deleted' })
+        body: JSON.stringify({ message: 'Agreement and related payments deleted' })
       };
     }
 

@@ -113,11 +113,19 @@ exports.handler = async (event, context) => {
 
         const driver = drivers[0];
         const firstName = driver.name.split(' ')[0];
-        const plainPassword = `${firstName}@123`;
+        const expectedPassword = `${firstName}@123`;
+
+        // VALIDATE PASSWORD BEFORE CREATING ACCOUNT
+        if (password !== expectedPassword) {
+          return {
+            statusCode: 401,
+            body: JSON.stringify({ error: 'Invalid driver ID or password' })
+          };
+        }
 
         // Hash password
         const passwordHash = await new Promise((resolve, reject) => {
-          bcryptjs.hash(plainPassword, 10, (err, hash) => {
+          bcryptjs.hash(expectedPassword, 10, (err, hash) => {
             if (err) reject(err);
             else resolve(hash);
           });
@@ -195,6 +203,74 @@ exports.handler = async (event, context) => {
           driverName: driver.name,
           message: 'Driver login successful'
         })
+      };
+    }
+
+    // POST /api/auth/register-driver - Register new driver account (called when driver is created in ERP)
+    if (httpMethod === 'POST' && action === 'register-driver') {
+      const { driverId, password } = JSON.parse(body);
+
+      if (!driverId || !password) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: 'Driver ID and password required' })
+        };
+      }
+
+      // Check if driver exists
+      const { data: drivers, error: driverError } = await supabase
+        .from('drivers')
+        .select('id, name')
+        .eq('id', parseInt(driverId));
+
+      if (driverError || !drivers || drivers.length === 0) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: 'Driver not found' })
+        };
+      }
+
+      // Check if account already exists
+      const { data: existing } = await supabase
+        .from('driver_accounts')
+        .select('id')
+        .eq('driver_id', parseInt(driverId));
+
+      if (existing && existing.length > 0) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ message: 'Driver account already exists' })
+        };
+      }
+
+      // Hash password
+      const passwordHash = await new Promise((resolve, reject) => {
+        bcryptjs.hash(password, 10, (err, hash) => {
+          if (err) reject(err);
+          else resolve(hash);
+        });
+      });
+
+      // Create driver account
+      const { error: insertError } = await supabase
+        .from('driver_accounts')
+        .insert([{
+          driver_id: parseInt(driverId),
+          password_hash: passwordHash,
+          created_at: new Date().toISOString()
+        }]);
+
+      if (insertError) {
+        console.error('Account creation error:', insertError);
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ error: 'Failed to create account' })
+        };
+      }
+
+      return {
+        statusCode: 201,
+        body: JSON.stringify({ message: 'Driver account created successfully' })
       };
     }
 

@@ -133,6 +133,13 @@ exports.handler = async (event, context) => {
         };
       }
 
+      if (amount <= 0) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: 'Amount must be greater than 0' })
+        };
+      }
+
       const insertData = {
         driver_id,
         amount,

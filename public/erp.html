@@ -672,7 +672,7 @@ tr:last-child td { border-bottom: none; }
           </div>
           <div class="tbl-wrap">
             <table>
-              <thead><tr><th>#</th><th>Driver/Rider</th><th>Phone</th><th>Number Plate</th><th>Type</th><th>Assigned Date</th><th>Status</th><th>Portal Activity</th><th>Actions</th></tr></thead>
+              <thead><tr><th>#</th><th>Driver/Rider</th><th>Phone</th><th>Number Plate</th><th>Type</th><th>Assigned Date</th><th>Status</th><th>Portal Access</th><th>Portal Activity</th><th>Actions</th></tr></thead>
               <tbody id="drivers-tbody"></tbody>
             </table>
           </div>
@@ -2334,7 +2334,7 @@ function renderDrivers() {
     // Render drivers with submission counts fetched from Supabase
     const tbody = document.getElementById('drivers-tbody');
     if (drivers.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="9" style="color:var(--text2);text-align:center">No drivers found</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10" style="color:var(--text2);text-align:center">No drivers found</td></tr>';
       return;
     }
 
@@ -2347,6 +2347,7 @@ function renderDrivers() {
         <td><span class="badge ${d.type==='CAR'?'badge-car':'badge-bike'}">${d.type}</span></td>
         <td>${d.assigned_date||'—'}</td>
         <td>${badgeStatus(d.status)}</td>
+        <td id="portal-${d.id}" style="font-size:12px;">Checking...</td>
         <td id="activity-${d.id}">Loading...</td>
         <td>
           <button class="btn btn-xs" onclick="openEditDriver(${d.id})" title="Edit"><i class="fas fa-edit"></i> Edit</button>
@@ -2356,8 +2357,26 @@ function renderDrivers() {
         </td>
       </tr>`).join('');
 
-    // Load submission activity for each driver
+    // Load portal access status and submission activity for each driver
     drivers.forEach(d => {
+      // Check portal access status
+      sbFetch(`/rest/v1/driver_accounts?driver_id=eq.${d.id}&select=id,created_at`)
+        .then(accounts => {
+          const cell = document.getElementById(`portal-${d.id}`);
+          if (cell) {
+            if (Array.isArray(accounts) && accounts.length > 0) {
+              cell.innerHTML = '<span style="color:#30c060;">✓ Active</span>';
+            } else {
+              cell.innerHTML = '<span style="color:#f39c12;">⏳ Pending</span>';
+            }
+          }
+        })
+        .catch(() => {
+          const cell = document.getElementById(`portal-${d.id}`);
+          if (cell) cell.innerHTML = '—';
+        });
+
+      // Load submission activity
       sbFetch(`/rest/v1/driver_submissions?driver_id=eq.${d.id}&select=id,submission_status,amount`)
         .then(subs => {
           if (!Array.isArray(subs)) subs = [];
@@ -2377,7 +2396,7 @@ function renderDrivers() {
     });
   }).catch(err => {
     console.error('Error loading drivers:', err);
-    document.getElementById('drivers-tbody').innerHTML = '<tr><td colspan="9" style="color:red">Error loading drivers</td></tr>';
+    document.getElementById('drivers-tbody').innerHTML = '<tr><td colspan="10" style="color:red">Error loading drivers</td></tr>';
   });
 }
 
@@ -3659,8 +3678,8 @@ let rtoSubmissionsSelectedIds = new Set();
 async function renderRtoSubmissions() {
   try {
     const result = await apiCall('/rent-to-own/approvals/pending');
-    // Filter for APPROVED payments only (RTO Driver Submissions shows approved payments)
-    rtoSubmissions = (result.data || []).filter(s => s.approval_status === 'approved');
+    // Show ALL payments (pending and approved) - both need admin attention
+    rtoSubmissions = (result.data || []);
 
     document.getElementById('rto-submissions-tbody').innerHTML = rtoSubmissions.map(s => `
       <tr>
@@ -3758,6 +3777,11 @@ async function approveRtoSubmission(paymentId) {
 
   try {
     const submission = rtoSubmissions.find(s => s.id === paymentId);
+    if (!submission) {
+      alert('Submission not found. Please refresh the page.');
+      return;
+    }
+
     await apiCall(
       `/rent-to-own/${submission.agreement_id}/approve-payment/${paymentId}`,
       'POST',
@@ -3781,6 +3805,11 @@ async function rejectRtoSubmission(paymentId) {
 
   try {
     const submission = rtoSubmissions.find(s => s.id === paymentId);
+    if (!submission) {
+      alert('Submission not found. Please refresh the page.');
+      return;
+    }
+
     await apiCall(
       `/rent-to-own/${submission.agreement_id}/reject-payment/${paymentId}`,
       'POST',
@@ -5200,7 +5229,7 @@ async function saveDriverWithCredentials() {
   }
 
   try {
-    // Create driver in LOCAL SQLite database (not Supabase)
+    // Create driver in database
     const driverRes = await apiCall('/drivers', 'POST', driverData);
 
     const driverId = driverRes?.id || driverRes?.lastInsertId;
@@ -5210,8 +5239,18 @@ async function saveDriverWithCredentials() {
     const firstName = driverData.name.split(' ')[0];
     const password = `${firstName}@123`;
 
-    // Skip Supabase account creation for local testing
-    // In production, this should be created via RPC function for security
+    // Create driver account immediately (before showing credentials)
+    try {
+      const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+      await fetch(`${baseUrl}/api/auth/register-driver`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ driverId, password })
+      }).then(r => r.json());
+    } catch (accountErr) {
+      console.warn('Note: Driver account creation may have failed. Will be auto-created on first login.', accountErr);
+    }
+
     console.log('Driver created. Portal credentials:', { driverId, password });
 
     // Show credentials to admin
@@ -5234,6 +5273,19 @@ async function saveDriverWithCredentials() {
       <button onclick="this.parentElement.remove();" style="width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">CLOSE</button>
     `;
     document.body.appendChild(credentialsModal);
+
+    // If a vehicle was selected, link this driver to it
+    const vehicleId = document.getElementById('d-vehicle')?.value;
+    if (vehicleId) {
+      try {
+        const vehicle = await apiCall(`/vehicles/${vehicleId}`);
+        if (!vehicle.error) {
+          await apiCall(`/vehicles/${vehicleId}`, 'PUT', { ...vehicle, assigned_driver_id: driverId });
+        }
+      } catch (vehicleErr) {
+        console.warn('Failed to assign vehicle:', vehicleErr);
+      }
+    }
 
     // Close the create driver modal and reload
     closeModal('modal-driver');
