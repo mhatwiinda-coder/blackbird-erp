@@ -95,7 +95,7 @@ exports.handler = async (event, context) => {
     if (httpMethod === 'GET' && endpoint === 'top-drivers') {
       const [paymentsRes, submissionsRes, driversRes] = await Promise.all([
         supabase.from('payments').select('driver_id, payer_name, amount, payment_status'),
-        supabase.from('driver_submissions').select('driver_id, amount, submission_status').select('driver_id, amount, submission_status, driver:drivers(name)'),
+        supabase.from('driver_submissions').select('driver_id, amount, submission_status, driver:drivers(name)'),
         supabase.from('drivers').select('id, name')
       ]);
 
