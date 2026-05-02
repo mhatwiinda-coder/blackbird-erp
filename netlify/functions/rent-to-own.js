@@ -275,18 +275,26 @@ exports.handler = async (event, context) => {
       const approvalStatus = isAdminEntry ? 'approved' : 'pending';
 
       // Record payment
+      const paymentData = {
+        agreement_id: agreementId,
+        amount,
+        payment_method: payment_method || 'driver_submission',
+        payment_date: payment_date || new Date().toISOString().split('T')[0],
+        approval_status: approvalStatus,
+        created_at: now
+      };
+
+      // Only add optional fields if provided
+      if (isAdminEntry) {
+        paymentData.approved_at = now;
+      }
+      if (notes) {
+        paymentData.notes = notes;
+      }
+
       const { data: payment, error: payError } = await supabase
         .from('rent_to_own_payments')
-        .insert([{
-          agreement_id: agreementId,
-          amount,
-          payment_method: payment_method || 'driver_submission',
-          payment_date: payment_date || new Date().toISOString().split('T')[0],
-          approval_status: approvalStatus,
-          approved_at: isAdminEntry ? now : null,
-          notes: notes || null,
-          created_at: now
-        }])
+        .insert([paymentData])
         .select();
 
       if (payError) throw payError;
