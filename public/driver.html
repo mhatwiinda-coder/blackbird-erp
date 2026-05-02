@@ -1269,17 +1269,19 @@
     function updateSummary() {
         const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
         const apiHost = baseUrl;
-        fetch(`${apiHost}/api/driver-submissions/my-submissions?driver_id=${currentDriver.driverId}&status=pending&limit=1000`, {
+        // Don't filter by status - fetch ALL submissions so we can count both pending and approved
+        fetch(`${apiHost}/api/driver-submissions/my-submissions?driver_id=${currentDriver.driverId}&limit=1000`, {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${currentDriver.token}` }
         })
         .then(r => r.json())
         .then(data => {
             if (data.data) {
-                const pending = data.data.filter(s => s.submission_status === 'pending').length;
-                const approved = data.data.filter(s => s.submission_status === 'approved');
-                const approvedTotal = approved.reduce((sum, s) => sum + parseFloat(s.amount), 0);
-                const total = data.data.reduce((sum, s) => sum + parseFloat(s.amount), 0);
+                // Filter on client side, not server side
+                const pending = data.data.filter(s => (s.submission_status || '').toLowerCase() === 'pending').length;
+                const approved = data.data.filter(s => (s.submission_status || '').toLowerCase() === 'approved');
+                const approvedTotal = approved.reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
+                const total = data.data.reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
 
                 document.getElementById('pending-count').textContent = pending;
                 document.getElementById('approved-total').textContent = 'ZMW' + approvedTotal.toLocaleString('en-NG', {minimumFractionDigits: 2});
