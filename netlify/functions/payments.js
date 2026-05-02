@@ -64,13 +64,23 @@ exports.handler = async (event, context) => {
     if (httpMethod === 'GET' && id === 'backdating' && pathSegments[1]) {
       const driverId = pathSegments[1];
 
+      // First, get the driver's name to match against payer_name for legacy payments
+      const { data: driverData } = await supabase
+        .from('drivers')
+        .select('name')
+        .eq('id', driverId)
+        .single();
+
+      const driverName = driverData?.name || '';
+
+      // Query payments by driver_id OR by matching payer_name (for legacy payments without driver_id)
       const { data, error } = await supabase
         .from('payments')
         .select(`
           *,
           driver:drivers(name)
         `)
-        .eq('driver_id', driverId)
+        .or(`driver_id.eq.${driverId},payer_name.ilike.${driverName}`)
         .order('payment_date', { ascending: false });
 
       if (error) throw error;
