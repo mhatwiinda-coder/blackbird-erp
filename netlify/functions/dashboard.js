@@ -23,15 +23,24 @@ exports.handler = async (event, context) => {
       const totalVehicles = (vehiclesRes.data || []).length;
 
       // Calculate total revenue from all approved sources (avoid double-counting)
-      // Only count from payments table if NOT a driver submission (exclude 'Driver Submission' type)
-      const paymentsRevenue = (paymentsRes.data || [])
-        .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') && p.payment_type !== 'Driver Submission')
-        .reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
+      // RULE: Count each payment from ONLY ONE source
+      // - driver_submissions: PRIMARY source for all driver payments (Weekly Cashing + RTO Submissions)
+      // - payments: ONLY for non-driver payments (manual entries, system payments)
+      // - rent_to_own_payments: RTO payment records only
 
-      // Count approved submissions (these come from the driver portal)
+      // Count ALL approved submissions (these are the single source of truth for driver payments)
       const submissionsRevenue = (submissionsRes.data || [])
         .filter(s => s.submission_status === 'Approved' || s.submission_status === 'approved')
         .reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
+
+      // Count from payments table ONLY for payments that are NOT driver-related
+      // Exclude ALL driver payment types: 'Driver Submission', 'Driver Weekly Cashing', 'Weekly Cashing'
+      const paymentsRevenue = (paymentsRes.data || [])
+        .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') &&
+                     p.payment_type !== 'Driver Submission' &&
+                     p.payment_type !== 'Driver Weekly Cashing' &&
+                     p.payment_type !== 'Weekly Cashing')
+        .reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
 
       // Count RTO payments separately
       const rtoRevenue = (rtoPaymentsRes.data || [])
@@ -65,9 +74,12 @@ exports.handler = async (event, context) => {
 
       const monthlyRevenue = {};
 
-      // Add payments data (exclude Driver Submission types to avoid duplication)
+      // Add payments data (exclude ALL driver payment types to avoid duplication with submissions)
       (paymentsRes.data || [])
-        .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') && p.payment_type !== 'Driver Submission')
+        .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') &&
+                     p.payment_type !== 'Driver Submission' &&
+                     p.payment_type !== 'Driver Weekly Cashing' &&
+                     p.payment_type !== 'Weekly Cashing')
         .forEach(p => {
           if (p.payment_date) {
             const month = new Date(p.payment_date).getMonth();
@@ -112,9 +124,12 @@ exports.handler = async (event, context) => {
         driverMap[d.id] = d.name;
       });
 
-      // Add payments data (exclude Driver Submission types to avoid duplication)
+      // Add payments data (exclude ALL driver payment types to avoid duplication with submissions)
       (paymentsRes.data || [])
-        .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') && p.payment_type !== 'Driver Submission')
+        .filter(p => (p.payment_status === 'Paid' || p.payment_status === 'Approved') &&
+                     p.payment_type !== 'Driver Submission' &&
+                     p.payment_type !== 'Driver Weekly Cashing' &&
+                     p.payment_type !== 'Weekly Cashing')
         .forEach(p => {
           const name = p.payer_name || (p.driver_id ? driverMap[p.driver_id] : null) || 'Unknown';
           driverEarnings[name] = (driverEarnings[name] || 0) + parseFloat(p.amount || 0);
