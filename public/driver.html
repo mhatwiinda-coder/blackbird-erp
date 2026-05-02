@@ -1090,7 +1090,7 @@
             const submissions = submissionsData.data || [];
 
             // Fetch backdated payments from payments table
-            const paymentsUrl = `${baseUrl}/api/payments?driver_id=${currentDriver.driverId}`;
+            const paymentsUrl = `${baseUrl}/api/payments/backdating/${currentDriver.driverId}`;
             const paymentsResponse = await fetch(paymentsUrl, {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${currentDriver.token}` }
