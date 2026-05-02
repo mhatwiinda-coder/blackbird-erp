@@ -8,15 +8,35 @@ exports.handler = async (event, context) => {
     const endpoint = path.replace(basePath, '').split('/').filter(Boolean)[0];
 
     if (httpMethod === 'GET' && endpoint === 'stats') {
-      const [driversRes, vehiclesRes, paymentsRes] = await Promise.all([
-        supabase.from('drivers').select('id', { count: 'exact' }),
-        supabase.from('vehicles').select('id', { count: 'exact' }),
-        supabase.from('payments').select('amount').eq('payment_status', 'Paid')
+      const [driversRes, vehiclesRes, paymentsRes, submissionsRes, rtoPaymentsRes] = await Promise.all([
+        supabase.from('drivers').select('*'),
+        supabase.from('vehicles').select('*'),
+        supabase.from('payments').select('amount, payment_status'),
+        supabase.from('driver_submissions').select('amount, submission_status'),
+        supabase.from('rent_to_own_payments').select('amount')
       ]);
-      const totalRevenue = (paymentsRes.data || []).reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
+
+      // Count active drivers and vehicles
+      const totalDrivers = (driversRes.data || []).length;
+      const totalVehicles = (vehiclesRes.data || []).length;
+
+      // Calculate total revenue from all approved sources
+      const paymentsRevenue = (paymentsRes.data || [])
+        .filter(p => p.payment_status === 'Paid' || p.payment_status === 'Approved')
+        .reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
+
+      const submissionsRevenue = (submissionsRes.data || [])
+        .filter(s => s.submission_status === 'Approved' || s.submission_status === 'approved')
+        .reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
+
+      const rtoRevenue = (rtoPaymentsRes.data || [])
+        .reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
+
+      const totalRevenue = paymentsRevenue + submissionsRevenue + rtoRevenue;
+
       return {
         statusCode: 200,
-        body: JSON.stringify({ data: { total_drivers: driversRes.count || 0, total_vehicles: vehiclesRes.count || 0, total_revenue: totalRevenue, active_jobs: 0 }})
+        body: JSON.stringify({ data: { total_drivers: totalDrivers, total_vehicles: totalVehicles, total_revenue: totalRevenue, active_jobs: 0 }})
       };
     }
 
@@ -32,26 +52,81 @@ exports.handler = async (event, context) => {
     }
 
     if (httpMethod === 'GET' && endpoint === 'monthly-revenue') {
-      const { data: payments } = await supabase.from('payments').select('amount, payment_date').eq('payment_status', 'Paid');
+      const [paymentsRes, submissionsRes, rtoRes] = await Promise.all([
+        supabase.from('payments').select('amount, payment_date, payment_status'),
+        supabase.from('driver_submissions').select('amount, submission_date, submission_status'),
+        supabase.from('rent_to_own_payments').select('amount, created_at')
+      ]);
+
       const monthlyRevenue = {};
-      (payments || []).forEach(p => {
-        if (p.payment_date) {
-          const month = new Date(p.payment_date).getMonth();
-          monthlyRevenue[month] = (monthlyRevenue[month] || 0) + parseFloat(p.amount || 0);
+
+      // Add payments data
+      (paymentsRes.data || [])
+        .filter(p => p.payment_status === 'Paid' || p.payment_status === 'Approved')
+        .forEach(p => {
+          if (p.payment_date) {
+            const month = new Date(p.payment_date).getMonth();
+            monthlyRevenue[month] = (monthlyRevenue[month] || 0) + parseFloat(p.amount || 0);
+          }
+        });
+
+      // Add submissions data
+      (submissionsRes.data || [])
+        .filter(s => s.submission_status === 'Approved' || s.submission_status === 'approved')
+        .forEach(s => {
+          if (s.submission_date) {
+            const month = new Date(s.submission_date).getMonth();
+            monthlyRevenue[month] = (monthlyRevenue[month] || 0) + parseFloat(s.amount || 0);
+          }
+        });
+
+      // Add RTO payments data
+      (rtoRes.data || []).forEach(r => {
+        if (r.created_at) {
+          const month = new Date(r.created_at).getMonth();
+          monthlyRevenue[month] = (monthlyRevenue[month] || 0) + parseFloat(r.amount || 0);
         }
       });
+
       const data = Object.keys(monthlyRevenue).map(month => ({ month: parseInt(month), revenue: monthlyRevenue[month] }));
       return { statusCode: 200, body: JSON.stringify({ data }) };
     }
 
     if (httpMethod === 'GET' && endpoint === 'top-drivers') {
-      const { data: payments } = await supabase.from('payments').select('payer_name, amount, payment_status').eq('payment_status', 'Paid');
+      const [paymentsRes, submissionsRes, driversRes] = await Promise.all([
+        supabase.from('payments').select('driver_id, payer_name, amount, payment_status'),
+        supabase.from('driver_submissions').select('driver_id, amount, submission_status').select('driver_id, amount, submission_status, driver:drivers(name)'),
+        supabase.from('drivers').select('id, name')
+      ]);
+
       const driverEarnings = {};
-      (payments || []).forEach(p => {
-        const name = p.payer_name || 'Unknown';
-        driverEarnings[name] = (driverEarnings[name] || 0) + parseFloat(p.amount || 0);
+
+      // Map driver IDs to names
+      const driverMap = {};
+      (driversRes.data || []).forEach(d => {
+        driverMap[d.id] = d.name;
       });
-      const data = Object.keys(driverEarnings).map(name => ({ name, total_earnings: driverEarnings[name] })).sort((a, b) => b.total_earnings - a.total_earnings).slice(0, 10);
+
+      // Add payments data
+      (paymentsRes.data || [])
+        .filter(p => p.payment_status === 'Paid' || p.payment_status === 'Approved')
+        .forEach(p => {
+          const name = p.payer_name || (p.driver_id ? driverMap[p.driver_id] : null) || 'Unknown';
+          driverEarnings[name] = (driverEarnings[name] || 0) + parseFloat(p.amount || 0);
+        });
+
+      // Add submissions data
+      (submissionsRes.data || [])
+        .filter(s => s.submission_status === 'Approved' || s.submission_status === 'approved')
+        .forEach(s => {
+          const name = s.driver?.name || (s.driver_id ? driverMap[s.driver_id] : null) || 'Unknown';
+          driverEarnings[name] = (driverEarnings[name] || 0) + parseFloat(s.amount || 0);
+        });
+
+      const data = Object.keys(driverEarnings)
+        .map(name => ({ name, total_earnings: driverEarnings[name] }))
+        .sort((a, b) => b.total_earnings - a.total_earnings)
+        .slice(0, 10);
       return { statusCode: 200, body: JSON.stringify({ data }) };
     }
 
