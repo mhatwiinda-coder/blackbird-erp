@@ -59,7 +59,7 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // GET /api/rent-to-own/approvals/pending - Recent pending and approved payments
+    // GET /api/rent-to-own/approvals/pending - Recent pending payments only
     if (httpMethod === 'GET' && segment === 'approvals' && pathSegments[1] === 'pending') {
       const { data: payments, error } = await supabase
         .from('rent_to_own_payments')
@@ -76,6 +76,7 @@ exports.handler = async (event, context) => {
           agreement_id,
           agreement:rent_to_own_agreements(total_price, paid_amount, remaining_balance, agreement_status, driver_id, vehicle_id, driver:drivers(name), vehicle:vehicles(plate, make_model))
         `)
+        .eq('approval_status', 'pending')
         .order('created_at', { ascending: false })
         .limit(20);
 
@@ -239,9 +240,9 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // POST /api/rent-to-own/:id/record-payment - Record payment (immediate update for manual admin entry)
+    // POST /api/rent-to-own/:id/record-payment - Submit payment for approval (driver) or record immediately (admin)
     if (httpMethod === 'POST' && id && pathSegments[1] === 'record-payment') {
-      const { amount, payment_method, payment_date } = JSON.parse(body);
+      const { amount, payment_method, payment_date, notes } = JSON.parse(body);
 
       // Validate amount
       if (!amount || amount <= 0) {
@@ -251,7 +252,7 @@ exports.handler = async (event, context) => {
         };
       }
 
-      // Get current agreement (use segment as agreement ID, not id)
+      // Get current agreement
       const agreementId = parseInt(segment);
       const { data: agreement, error: agreeError } = await supabase
         .from('rent_to_own_agreements')
@@ -260,8 +261,6 @@ exports.handler = async (event, context) => {
         .single();
 
       if (agreeError) throw agreeError;
-
-      // Validate agreement exists
       if (!agreement) {
         return {
           statusCode: 404,
@@ -269,64 +268,72 @@ exports.handler = async (event, context) => {
         };
       }
 
-      // Warn if payment exceeds remaining balance (but allow it)
-      if (amount > agreement.remaining_balance) {
-        console.warn(`Payment ${amount} exceeds remaining balance ${agreement.remaining_balance}. Agreement will be completed.`);
-      }
-
-      const new_paid = agreement.paid_amount + amount;
-      const new_remaining = Math.max(0, agreement.remaining_balance - amount);
-      const is_completed = new_remaining <= 0;
       const now = new Date().toISOString();
 
-      // Record payment with approval_status='approved' (admin is recording it manually, so it's auto-approved)
+      // Determine if this is admin entry (has payment_method) or driver submission (no payment_method)
+      const isAdminEntry = !!payment_method;
+      const approvalStatus = isAdminEntry ? 'approved' : 'pending';
+
+      // Record payment
       const { data: payment, error: payError } = await supabase
         .from('rent_to_own_payments')
         .insert([{
           agreement_id: agreementId,
           amount,
-          payment_method: payment_method || 'admin_manual',
+          payment_method: payment_method || 'driver_submission',
           payment_date: payment_date || new Date().toISOString().split('T')[0],
-          approval_status: 'approved',
-          approved_at: now,
+          approval_status: approvalStatus,
+          approved_at: isAdminEntry ? now : null,
+          notes: notes || null,
           created_at: now
         }])
         .select();
 
       if (payError) throw payError;
 
-      // Update agreement balances immediately (manual admin entry is auto-approved)
-      const updateData = {
-        paid_amount: new_paid,
-        remaining_balance: new_remaining
+      let responseData = {
+        message: isAdminEntry
+          ? 'Payment recorded and agreement updated'
+          : 'Payment submitted for approval',
+        payment: payment[0],
+        agreement_id: agreementId
       };
 
-      if (is_completed) {
-        updateData.agreement_status = 'Completed';
-        updateData.ownership_transferred = true;
-        updateData.ownership_transferred_date = now;
+      // Only update agreement if admin is recording it manually
+      if (isAdminEntry) {
+        const new_paid = agreement.paid_amount + amount;
+        const new_remaining = Math.max(0, agreement.remaining_balance - amount);
+        const is_completed = new_remaining <= 0;
+
+        const updateData = {
+          paid_amount: new_paid,
+          remaining_balance: new_remaining
+        };
+
+        if (is_completed) {
+          updateData.agreement_status = 'Completed';
+          updateData.ownership_transferred = true;
+          updateData.ownership_transferred_date = now;
+        }
+
+        const { data: updated, error: updateError } = await supabase
+          .from('rent_to_own_agreements')
+          .update(updateData)
+          .eq('id', agreementId)
+          .select();
+
+        if (updateError) throw updateError;
+
+        responseData.agreement_updated = {
+          paid_amount: new_paid,
+          remaining_balance: new_remaining,
+          agreement_status: is_completed ? 'Completed' : 'Active'
+        };
       }
 
-      const { data: updated, error: updateError } = await supabase
-        .from('rent_to_own_agreements')
-        .update(updateData)
-        .eq('id', agreementId)
-        .select();
-
-      if (updateError) throw updateError;
-
       return {
-        statusCode: 200,
-        body: JSON.stringify({
-          message: 'Payment recorded and agreement updated',
-          data: updated[0],
-          payment: payment[0],
-          agreement_updated: {
-            paid_amount: new_paid,
-            remaining_balance: new_remaining,
-            agreement_status: is_completed ? 'Completed' : 'Active'
-          }
-        })
+        statusCode: isAdminEntry ? 200 : 201,
+        body: JSON.stringify(responseData)
       };
     }
 
