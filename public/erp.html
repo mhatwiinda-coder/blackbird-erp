@@ -2041,6 +2041,37 @@ async function apiCall(endpoint, method = 'GET', data = null) {
       }
     }
 
+    // === PAYMENTS (Local API) - Special handling for /payments/backdating/* ===
+    if (parts[0] === 'payments' && (parts[1] === 'backdating' || parts[2] === 'backdating')) {
+      const trimmedPath = path.startsWith('/') ? path.slice(1) : path;
+      const baseUrl = window.location.origin.startsWith('file') ? 'http://localhost:8000' : window.location.origin;
+      const localPath = baseUrl + '/api/' + trimmedPath + (qs ? '?' + qs : '');
+      const headers = { 'Content-Type': 'application/json' };
+      if (authToken) {
+        headers['Authorization'] = 'Bearer ' + authToken;
+      }
+      const response = await fetch(localPath, {
+        method: method,
+        headers: headers,
+        body: data ? JSON.stringify(data) : undefined
+      });
+      const responseText = await response.text();
+      console.log(`[PAYMENTS] Status: ${response.status}, Response:`, responseText);
+      if (!response.ok) {
+        try {
+          const errorData = JSON.parse(responseText);
+          throw new Error('API error: ' + (errorData.error || response.statusText));
+        } catch (e) {
+          throw new Error('API error: ' + response.statusText + ' - ' + responseText);
+        }
+      }
+      try {
+        return JSON.parse(responseText);
+      } catch (e) {
+        return responseText;
+      }
+    }
+
     // === CRUD ===
     const key = parts[0];
     const table = TABLE_MAP[key];
@@ -5120,11 +5151,12 @@ function filterSubmissionsTable() {
       <td>W${sub.week || '—'}</td>
       <td>${sub.notes || '—'}</td>
       <td><span class="badge ${sub.submission_status?.toLowerCase() === 'pending' ? 'badge-warning' : sub.submission_status?.toLowerCase() === 'approved' ? 'badge-success' : 'badge-danger'}">${sub.submission_status?.toUpperCase() || 'PENDING'}</span></td>
-      <td>
+      <td style="display:flex; gap:5px;">
         ${sub.submission_status?.toLowerCase() === 'pending' ? `
-          <button class="btn btn-success btn-sm" onclick="approveDriverSubmission(${sub.id})" style="margin-right:5px;"><i class="fas fa-check"></i> Approve</button>
-          <button class="btn btn-danger btn-sm" onclick="rejectDriverSubmission(${sub.id})"><i class="fas fa-times"></i> Reject</button>
-        ` : '—'}
+          <button class="btn btn-success btn-sm" onclick="approveDriverSubmission(${sub.id})" title="Approve"><i class="fas fa-check"></i></button>
+          <button class="btn btn-danger btn-sm" onclick="rejectDriverSubmission(${sub.id})" title="Reject"><i class="fas fa-times"></i></button>
+        ` : ''}
+        <button class="btn btn-danger btn-sm" onclick="deleteSubmission(${sub.id})" title="Delete"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
   `).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--text2)">No submissions match filters</td></tr>';
@@ -5239,8 +5271,15 @@ async function deleteSubmission(submissionId) {
   if (!confirm('Delete this submission? This cannot be undone.')) return;
   try {
     await apiCall(`/admin-cleanup/delete-submission/${submissionId}`, 'POST');
-    showNotification('Submission deleted', 'success', 2000);
-    await renderRtoSubmissions();
+    showNotification('Submission deleted successfully', 'success', 2000);
+    // Refresh the appropriate table based on context
+    if (document.getElementById('submissions-approval-tbody').parentElement.offsetParent !== null) {
+      // Driver Submissions tab is visible
+      await loadDriverSubmissions();
+    } else {
+      // RTO Submissions tab is visible
+      await renderRtoSubmissions();
+    }
   } catch (error) {
     alert('Failed to delete submission: ' + error.message);
     console.error('Error:', error);
