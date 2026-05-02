@@ -99,7 +99,7 @@ exports.handler = async (event, context) => {
 
     // POST /api/payments/backdating/add - Add a new backdated payment
     if (httpMethod === 'POST' && id === 'backdating' && pathSegments[1] === 'add') {
-      const { driver_id, amount, payment_date, week, month, description, agreement_id } = JSON.parse(body);
+      const { driver_id, amount, payment_date, week, month, description } = JSON.parse(body);
 
       if (!driver_id || !amount || !payment_date) {
         return {
@@ -115,20 +115,23 @@ exports.handler = async (event, context) => {
         .eq('id', driver_id)
         .single();
 
+      const paymentData = {
+        driver_id,
+        payer_name: driverData?.name || `Driver ${driver_id}`,
+        amount,
+        payment_date,
+        payment_type: 'Driver Submission',
+        payment_status: 'Paid'
+      };
+
+      // Add optional fields
+      if (week) paymentData.week = week;
+      if (month) paymentData.month = month;
+      if (description) paymentData.description = description;
+
       const { data, error } = await supabase
         .from('payments')
-        .insert([{
-          driver_id,
-          payer_name: driverData?.name || `Driver ${driver_id}`,
-          amount,
-          payment_date,
-          payment_type: 'Driver Submission',
-          week,
-          month,
-          description: description || `Backdated payment - ${payment_date}`,
-          payment_status: 'Paid',
-          agreement_id: agreement_id || null
-        }])
+        .insert([paymentData])
         .select();
 
       if (error) throw error;
