@@ -40,8 +40,8 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // GET /api/payments/:id - Single payment
-    if (httpMethod === 'GET' && id) {
+    // GET /api/payments/:id - Single payment (exclude backdating)
+    if (httpMethod === 'GET' && id && id !== 'backdating') {
       const { data, error } = await supabase
         .from('payments')
         .select(`
@@ -58,70 +58,7 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // POST /api/payments - Create payment
-    if (httpMethod === 'POST' && !id) {
-      const { payer_name, amount, payment_type = 'Manual', description, payment_status = 'Paid', week, month, payment_date } = JSON.parse(body);
-
-      if (!payer_name || !amount) {
-        return {
-          statusCode: 400,
-          body: JSON.stringify({ error: 'Payer name and amount required' })
-        };
-      }
-
-      const { data, error } = await supabase
-        .from('payments')
-        .insert([{
-          payer_name,
-          amount,
-          payment_type,
-          description,
-          payment_status,
-          week,
-          month,
-          payment_date: payment_date || new Date().toISOString().split('T')[0]
-        }])
-        .select();
-
-      if (error) throw error;
-      return {
-        statusCode: 201,
-        body: JSON.stringify({ data: data[0] })
-      };
-    }
-
-    // PUT /api/payments/:id - Update payment
-    if (httpMethod === 'PUT' && id) {
-      const updateData = JSON.parse(body);
-
-      const { data, error } = await supabase
-        .from('payments')
-        .update(updateData)
-        .eq('id', id)
-        .select();
-
-      if (error) throw error;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ data: data[0] })
-      };
-    }
-
-    // DELETE /api/payments/:id - Delete payment
-    if (httpMethod === 'DELETE' && id && id !== 'backdating') {
-      const { error } = await supabase
-        .from('payments')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'Deleted successfully' })
-      };
-    }
-
-    // ========== BACKDATED PAYMENTS ==========
+    // ========== BACKDATED PAYMENTS (check first) ==========
 
     // GET /api/payments/backdating/:driver_id - List backdated payments for a driver
     if (httpMethod === 'GET' && id === 'backdating' && pathSegments[1]) {
@@ -135,7 +72,6 @@ exports.handler = async (event, context) => {
         `)
         .eq('driver_id', driverId)
         .eq('payment_type', 'Driver Submission')
-        .gte('payment_date', '2025-01-01')  // Backdated payments are from before system implementation
         .order('payment_date', { ascending: false });
 
       if (error) throw error;
@@ -220,6 +156,71 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 200,
         body: JSON.stringify({ message: 'Backdated payment deleted' })
+      };
+    }
+
+    // ========== REGULAR PAYMENTS ==========
+
+    // POST /api/payments - Create payment
+    if (httpMethod === 'POST' && !id) {
+      const { payer_name, amount, payment_type = 'Manual', description, payment_status = 'Paid', week, month, payment_date } = JSON.parse(body);
+
+      if (!payer_name || !amount) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: 'Payer name and amount required' })
+        };
+      }
+
+      const { data, error } = await supabase
+        .from('payments')
+        .insert([{
+          payer_name,
+          amount,
+          payment_type,
+          description,
+          payment_status,
+          week,
+          month,
+          payment_date: payment_date || new Date().toISOString().split('T')[0]
+        }])
+        .select();
+
+      if (error) throw error;
+      return {
+        statusCode: 201,
+        body: JSON.stringify({ data: data[0] })
+      };
+    }
+
+    // PUT /api/payments/:id - Update payment
+    if (httpMethod === 'PUT' && id) {
+      const updateData = JSON.parse(body);
+
+      const { data, error } = await supabase
+        .from('payments')
+        .update(updateData)
+        .eq('id', id)
+        .select();
+
+      if (error) throw error;
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ data: data[0] })
+      };
+    }
+
+    // DELETE /api/payments/:id - Delete payment
+    if (httpMethod === 'DELETE' && id && id !== 'backdating') {
+      const { error } = await supabase
+        .from('payments')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'Deleted successfully' })
       };
     }
 
