@@ -89,6 +89,12 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "/api/vehicle-maintenance-alerts*"
+  to = "/.netlify/functions/vehicle-maintenance-alerts"
+  status = 200
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
