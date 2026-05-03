@@ -73,22 +73,39 @@ exports.handler = async (event, context) => {
 
       const driverName = driverData?.name || '';
 
-      // Query payments by driver_id OR by matching payer_name (for legacy payments without driver_id)
-      const { data, error } = await supabase
+      // Query payments by driver_id (new payments with driver_id)
+      const { data: byDriverId } = await supabase
         .from('payments')
         .select(`
           *,
           driver:drivers(name)
         `)
-        .or(`driver_id.eq.${driverId},payer_name.ilike.${driverName}`)
+        .eq('driver_id', driverId)
         .order('payment_date', { ascending: false });
 
-      if (error) throw error;
+      // Query payments by payer_name (legacy payments without driver_id)
+      const { data: byPayerName } = await supabase
+        .from('payments')
+        .select(`
+          *,
+          driver:drivers(name)
+        `)
+        .ilike('payer_name', driverName)
+        .order('payment_date', { ascending: false });
+
+      // Merge and deduplicate by ID
+      const allPayments = [...(byDriverId || []), ...(byPayerName || [])];
+      const seenIds = new Set();
+      const uniquePayments = allPayments.filter(p => {
+        if (seenIds.has(p.id)) return false;
+        seenIds.add(p.id);
+        return true;
+      });
 
       return {
         statusCode: 200,
         body: JSON.stringify({
-          data: (data || []).map(p => ({
+          data: uniquePayments.map(p => ({
             id: p.id,
             driver_id: p.driver_id,
             driver_name: p.driver?.name || p.payer_name,
@@ -101,7 +118,7 @@ exports.handler = async (event, context) => {
             payment_status: p.payment_status,
             created_at: p.created_at
           })),
-          count: data?.length || 0
+          count: uniquePayments.length
         })
       };
     }
